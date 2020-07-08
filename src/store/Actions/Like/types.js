@@ -1,0 +1,3 @@
+export const LIKE_PENDING = 'LIKE_PENDING';
+export const LIKE_FULFILLED = 'LIKE_FULFILLED';
+export const LIKE_REJECTED = 'LIKE_REJECTED';
