@@ -10,7 +10,7 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     overflow: 'hidden',
   },
-  MViewStyle2: {flex: 1, overflow: 'hidden'},
+  MViewStyle2: {flex: 1.3, overflow: 'hidden'},
   GradientStyle1: {
     flex: 1,
   },
@@ -37,9 +37,9 @@ const styles = StyleSheet.create({
     resizeMode: 'contain',
   },
   MViewStyle3: {
-    flex: 1,
+    flex: 0.7,
     overflow: 'hidden',
-    justifyContent: 'center',
+    justifyContent: 'flex-end',
     alignItems: 'center',
     paddingHorizontal: 20,
   },
@@ -127,7 +127,34 @@ const styles = StyleSheet.create({
     zIndex: 2,
     alignItems: 'center',
     position: 'absolute',
-    height: '44%',
+    height: '59%',
+  },
+  absinView: {
+    width: '100%',
+    zIndex: 3,
+    position: 'absolute',
+    height: '30%',
+  },
+  imgBackStyle: {
+    width: '100%',
+    height: '100%',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  backimgTextStyle: {
+    marginHorizontal: 60,
+    fontSize: 35,
+    fontWeight: 'bold',
+    textAlign: 'center',
+    color: '#EF0061',
+  },
+  tacImageStyle: {
+    position: 'absolute',
+    top: 0,
+    right: 30,
+    zIndex: 5,
+    width: 58,
+    height: 44,
   },
 });
 export default styles;

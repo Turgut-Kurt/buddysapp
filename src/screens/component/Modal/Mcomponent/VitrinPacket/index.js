@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import {Text, View, StyleSheet} from 'react-native';
 class Index extends Component {
   renderItem = () => {
-    const {price, mounthNumber, Pro} = this.props;
+    const {price, numberText, Pro} = this.props;
     return (
       <View
         style={
@@ -22,18 +22,9 @@ class Index extends Component {
           </Text>
         </View>
         <View style={styles.MViewStyle3}>
-          <View style={styles.MViewStyle4}>
-            <Text style={styles.TextStyle2}>
-              {mounthNumber}
-              <Text style={styles.TextStyle4}>AY</Text>
-            </Text>
-          </View>
-          <View style={styles.MViewStyle5}>
-            <Text style={styles.TextStyle5}>
-              Sadece {'\n'}
-              {mounthNumber} AY
-            </Text>
-          </View>
+          <Text style={styles.TextStyle2}>{numberText}</Text>
+          <Text style={styles.TextStyle4}>Gosterim</Text>
+          <Text style={styles.TextStyle5}>{numberText} profil gösterimi</Text>
         </View>
       </View>
     );
@@ -89,14 +80,15 @@ const styles = StyleSheet.create({
     shadowRadius: 6.27,
     elevation: 10,
     backgroundColor: 'white',
+    alignItems: 'center',
   },
   MViewStyle4: {flex: 1, alignItems: 'center', justifyContent: 'center'},
   TextStyle2: {
-    fontSize: 31,
+    fontSize: 25,
     textAlign: 'center',
     fontWeight: 'bold',
   },
-  TextStyle4: {fontSize: 17, color: '#F61F48'},
+  TextStyle4: {fontSize: 17, color: '#F61F48',fontWeight:'bold'},
   MViewStyle5: {flex: 1.2},
   TextStyle5: {
     fontSize: 15,

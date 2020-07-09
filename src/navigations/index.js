@@ -4,6 +4,7 @@ import AuthLoadingScreen from '../screens/AuthLoadingScreen';
 import {createStackNavigator} from 'react-navigation-stack';
 import Home from '../screens/home';
 import Profile from '../screens/profile';
+import Profilenew from '../screens/profilenew';
 import Questions from '../screens/profile/questions';
 import Filter from '../screens/filter/FilterContainer';
 import Chat from '../screens/message/chat';
@@ -38,6 +39,7 @@ const AppStack = createStackNavigator(
     Action,
     Shop: ShopContainer,
     SolvedQuestions,
+    Profilenew: Profilenew,
   },
   {
     defaultNavigationOptions: {

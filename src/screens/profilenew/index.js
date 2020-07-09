@@ -24,6 +24,8 @@ import RNRestart from 'react-native-restart';
 import ImagePicker from 'react-native-image-picker';
 import ImageResizer from 'react-native-image-resizer';
 const NoUserPhoto = require('../../assets/images/no-user.jpg');
+const leftback = require('../../assets/images/leftback.png');
+const heart = require('../../assets/images/heart.png');
 const RNFS = require('react-native-fs');
 import ImageZoom from 'react-native-image-pan-zoom';
 import user from '../../assets/images/user3.png';
@@ -38,7 +40,9 @@ import LinearGradient from 'react-native-linear-gradient';
 import Magazin2 from '../component/Modal/Magazin2';
 import Magazin from '../component/Modal/Magazin';
 import Vitrin from '../component/Modal/Vitrin';
-class Profile extends React.Component {
+import Voman from '../../assets/images/Gender-woman.png';
+import Man from '../../assets/images/Gender-man.png';
+class Profilenew extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -99,10 +103,10 @@ class Profile extends React.Component {
       this.backHandler.remove();
     }
   }
-  handleBackButton() {
+  handleBackButton = () => {
     this.props.navigation.goBack();
     return true;
-  }
+  };
   async getUserInfo() {
     const {userId} = await this.props.SignInReducer;
     if (userId) {
@@ -347,6 +351,16 @@ class Profile extends React.Component {
         modalPhoto,
       } = this.state;
       let profile = detail.profile !== null ? detail.profile : {};
+      function getAge(dateString) {
+        var today = new Date();
+        var birthDate = new Date(dateString);
+        var age = today.getFullYear() - birthDate.getFullYear();
+        var m = today.getMonth() - birthDate.getMonth();
+        if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
+          age--;
+        }
+        return age;
+      }
       return (
         <View style={{flex: 1, width: '100%'}}>
           <Magazin
@@ -359,182 +373,206 @@ class Profile extends React.Component {
             handleClose={this.hideMagazin2}
           />
           <View style={styles1.HeaderContainer}>
-            <View style={styles1.HeaderViewStyle1} />
-            <View style={styles1.HeaderViewStyle2}>
-              <Image source={user} />
-              <Text style={styles1.HeaderTitleStyle}>Profil</Text>
-            </View>
             <View style={styles1.HeaderViewStyle1}>
               <TouchableOpacity
                 style={styles1.HeaderButtonStyle}
-                onPress={() => {
-                  navigate('Settings');
-                }}>
-                <Image source={settings} />
+                onPress={this.handleBackButton}>
+                <Image source={leftback} />
               </TouchableOpacity>
             </View>
+            <View style={styles1.HeaderViewStyle2}>
+              <Text style={styles1.HeaderTitleStyle}>{detail.username}</Text>
+            </View>
+            <View style={styles1.HeaderViewStyle11}>
+              <View style={styles1.itemContentStyle2}>
+                {profile.gender_choices === 'WM' ? (
+                  <LinearGradient
+                    start={{x: 0.0, y: 1.0}}
+                    end={{x: 1.0, y: 1.0}}
+                    locations={[0.2, 0.6, 0.9]}
+                    colors={['#FF62A5', '#FA4076', '#F61F48']}
+                    style={styles1.linearGradient}>
+                    <View style={styles1.itemContentStyle3}>
+                      <Image style={styles1.genderImage} source={Voman} />
+                    </View>
+                    <Text style={styles1.buttonText}>
+                      {getAge(profile.birth_date)}
+                    </Text>
+                  </LinearGradient>
+                ) : (
+                  <LinearGradient
+                    start={{x: 0.0, y: 1.0}}
+                    end={{x: 1.0, y: 1.0}}
+                    locations={[0.2, 0.6, 0.9]}
+                    colors={['#3A63FF', '#4FB2FF', '#62F9FF']}
+                    style={styles1.linearGradient}>
+                    <View style={styles1.itemContentStyle3}>
+                      <Image style={styles1.genderImage} source={Man} />
+                    </View>
+                    <Text style={styles1.buttonText}>
+                      {getAge(profile.birth_date)}
+                    </Text>
+                  </LinearGradient>
+                )}
+              </View>
+              <Text style={styles1.cityStyle}>
+                {profile && profile.city ? profile.city : 'sehiryok'}
+              </Text>
+            </View>
           </View>
+
           <View style={styles2.Container}>
-            <View style={styles2.ProfileView}>
-              <View style={styles2.ProfileViewStyle1}>
-                <View style={styles2.ProfileViewStyle3}>
-                  <View style={styles2.ProfileViewStyle6}>
-                    <View style={styles2.ProfileViewStyle7}>
-                      <Image
-                        source={
-                          profile && profile.photo
-                            ? {uri: profile.photo}
-                            : NoUserPhoto
-                        }
-                        style={styles2.profileImageStyle}
-                      />
-                    </View>
-                    <View style={styles2.ProfileViewStyle8}>
-                      <LinearGradient
-                        start={{x: 0.0, y: 1.0}}
-                        end={{x: 1.0, y: 1.0}}
-                        locations={[0.1, 0.5, 0.9]}
-                        colors={['#FF8960', '#FF8960', '#FF62A5']}
-                        style={styles2.GradientStyle2}>
-                        <Image
-                          source={Tac}
-                          style={styles2.profileImageStyle2}
-                        />
-                      </LinearGradient>
-                    </View>
-                  </View>
-                </View>
-                <View style={styles2.ProfileViewStyle4}>
-                  <View style={styles2.ProfileViewStyle9}>
-                    <Text style={styles2.ProfileTextStyle1}>
-                      {detail.first_name}
-                    </Text>
-                    <Text style={styles2.ProfileTextStyle2}>
-                      {profile && profile.city ? profile.city : 'sehiryok'}
-                    </Text>
-                  </View>
-                </View>
-                <View style={styles2.ProfileViewStyle5}>
-                  <TouchableOpacity
-                    style={styles2.ProfileTouchStyle}
-                    onPress={() => navigate('InfoChange')}>
-                    <Image source={Duzelt} />
-                  </TouchableOpacity>
-                </View>
-              </View>
-              <View style={styles2.ProfileViewStyle2}>
-                <View style={styles2.ProfileViewStyle10}>
-                  <Text style={styles2.ProfileTextStyle3}>BEGENME</Text>
-                  <Text style={styles2.ProfileTextStyle4}>2318</Text>
-                </View>
-                <View style={styles2.ProfileViewStyle10}>
-                  <Text style={styles2.ProfileTextStyle3}>MESAJ</Text>
-                  <Text style={styles2.ProfileTextStyle4}>364</Text>
-                </View>
-                <View style={styles2.ProfileViewStyle10}>
-                  <Text style={styles2.ProfileTextStyle3}>ESLESME</Text>
-                  <Text style={styles2.ProfileTextStyle4}>15</Text>
-                </View>
-              </View>
-            </View>
-
             <View style={styles2.Top}>
-              <LinearGradient
-                start={{x: 0.0, y: 1.0}}
-                end={{x: 1.0, y: 1.0}}
-                locations={[0.1, 0.4, 0.9]}
-                colors={['#FF62A5', '#FA4076', '#F61F48']}
-                style={styles2.GradientStyle1}
-              />
+              {this.renderImagesIc(detail)}
             </View>
-
+            <View style={styles2.Center}>
+              <View style={styles.actionBar}>
+                {!currentUserLike && (
+                  <>
+                    <TouchableOpacity
+                      style={{marginRight: 10}}
+                      onPress={() => {
+                        console.log({detail, currentUser});
+                        navigate('Questions', {detail, currentUser});
+                      }}>
+                      <Image
+                        source={require('../../assets/images/action.png')}
+                        style={styles.icon}
+                      />
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                      style={{
+                        marginRight: 10,
+                        height: 40,
+                        width: 40,
+                        borderRadius: 20,
+                        backgroundColor: 'white',
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                      }}
+                      onPress={() => this.onLike(detail, like)}>
+                      <Image
+                        source={like ? NotLikeIcon : LikeIcon}
+                        style={{width: 30, height: 30, resizeMode: 'contain'}}
+                      />
+                    </TouchableOpacity>
+                  </>
+                )}
+                {like && (
+                  <TouchableOpacity
+                    onPress={() => {
+                      this.sendChat(detail);
+                    }}>
+                    <Image
+                      source={require('../../assets/images/profileMessage.png')}
+                      style={styles.icon}
+                    />
+                  </TouchableOpacity>
+                )}
+                <TouchableOpacity
+                  style={{
+                    width: 36,
+                    height: 36,
+                    resizeMode: 'contain',
+                    backgroundColor: 'red',
+                    borderRadius: 18,
+                    padding: 6,
+                    marginLeft: 10,
+                  }}
+                  onPress={() =>
+                    this.props.navigation.navigate('AnswerQuestions', {
+                      otherUserId: detail.id,
+                      currentUser: currentUserLike,
+                      nextQuestion: () =>
+                        this.nextQuestion(detail.id, currentUserLike),
+                    })
+                  }>
+                  <Image
+                    source={require('../../assets/images/star.png')}
+                    style={{
+                      width: '100%',
+                      height: '100%',
+                      resizeMode: 'contain',
+                    }}
+                  />
+                </TouchableOpacity>
+                {currentUserLike && (
+                  <TouchableOpacity
+                    style={{
+                      width: 36,
+                      height: 36,
+                      resizeMode: 'contain',
+                      backgroundColor: 'red',
+                      borderRadius: 18,
+                      padding: 8,
+                      marginLeft: 10,
+                    }}
+                    onPress={() =>
+                      this.props.navigation.navigate('SolvedQuestions', {
+                        detail,
+                      })
+                    }>
+                    <Image
+                      source={require('../../assets/images/pencil.png')}
+                      style={{
+                        width: '100%',
+                        height: '100%',
+                        resizeMode: 'contain',
+                      }}
+                    />
+                  </TouchableOpacity>
+                )}
+              </View>
+            </View>
+            <View
+              style={{
+                width: '90%',
+                borderWidth: 0.5,
+                borderColor: 'rgba(112, 112, 112, 0.18)',
+              }}
+            />
             <View style={styles2.Content}>
-              <View style={styles2.ContentViewStyle1} />
               <View style={styles2.ContentViewStyle1}>
                 <Text style={styles2.ContentTextStyle1}>Hakkında </Text>
                 <Text style={styles2.ContentTextStyle2}>
                   {profile && profile.about_me ? profile.about_me : 'yok'}
                 </Text>
               </View>
-              <View style={styles2.ContentViewStyle2}>
-                <View style={styles2.ContentViewStyle3}>
-                  <View style={styles2.ContentViewStyle4}>
-                    <Text style={styles2.ContentTextStyle1}>Aradığı</Text>
-                    <Text style={styles2.ContentTextStyle2}>
-                      {profile.what_find
-                        ? this.onWhatFind(profile.what_find)
-                        : '...'}
-                    </Text>
-                  </View>
-                  <View style={styles2.ContentViewStyle4} />
-                  <View style={styles2.ContentViewStyle4}>
-                    <Text style={styles2.ContentTextStyle1}>Hobi</Text>
-                    <Text style={styles2.ContentTextStyle2}>
-                      {profile && profile.hobbies ? profile.hobbies : 'hobiyok'}
-                    </Text>
-                  </View>
+              <View style={styles2.ContentViewStyle3}>
+                <View style={styles2.ContentViewStyle4}>
+                  <Text style={styles2.ContentTextStyle1}>Aradığı</Text>
+                  <Text style={styles2.ContentTextStyle2}>
+                    {profile.what_find
+                      ? this.onWhatFind(profile.what_find)
+                      : '...'}
+                  </Text>
                 </View>
-                <View style={styles2.ContentViewStyle3}>
-                  <View style={styles2.ContentViewStyle4}>
-                    <Text style={styles2.ContentTextStyle1}>Telefon</Text>
-                    <Text style={styles2.ContentTextStyle2}>
-                      {profile && profile.phone ? profile.phone : 'telyok'}
-                    </Text>
-                  </View>
-                  <View style={styles2.ContentViewStyle4} />
-                  <View style={styles2.ContentViewStyle4}>
-                    <Text style={styles2.ContentTextStyle1}>İnstagram</Text>
-                    <Text style={styles2.ContentTextStyle2}>@*******</Text>
-                  </View>
+                <View style={styles2.ContentViewStyle4} />
+                <View style={styles2.ContentViewStyle4}>
+                  <Text style={styles2.ContentTextStyle1}>Hobi</Text>
+                  <Text style={styles2.ContentTextStyle2}>
+                    {profile && profile.hobbies ? profile.hobbies : 'hobiyok'}
+                  </Text>
                 </View>
               </View>
-            </View>
-
-            <View style={styles2.Bottom}>
-              <View style={styles2.BottomViewStyle1}>
-                <TouchableOpacity
-                  style={styles2.BottomViewStyle2}
-                  onPress={this.showMagazin2}>
-                  <View style={styles2.BottomViewStyle3}>
-                    <Image source={Star} style={styles2.BottomImageStyle1} />
-                  </View>
-                  <View style={styles2.BottomViewStyle4}>
-                    <Text style={styles2.BottomTextStyle1}>
-                      Hepsi Burada Paketi
-                    </Text>
-                  </View>
-                  <View style={styles2.BottomViewStyle5}>
-                    <Image source={Arrow} style={styles2.BottomImageStyle2} />
-                  </View>
-                </TouchableOpacity>
-                <TouchableOpacity style={styles2.BottomViewStyle2} onPress={this.showVitrin}>
-                  <View style={styles2.BottomViewStyle3}>
-                    <Image source={Heart} style={styles2.BottomImageStyle1} />
-                  </View>
-                  <View style={styles2.BottomViewStyle4}>
-                    <Text style={styles2.BottomTextStyle1}>
-                      Vitrin Paketleri
-                    </Text>
-                  </View>
-                  <View style={styles2.BottomViewStyle5}>
-                    <Image source={Arrow} style={styles2.BottomImageStyle2} />
-                  </View>
-                </TouchableOpacity>
-                <TouchableOpacity
-                  style={styles2.BottomViewStyle2}
-                  onPress={this.showMagazin}>
-                  <View style={styles2.BottomViewStyle3}>
-                    <Image source={Backtac} style={styles2.BottomImageStyle1} />
-                  </View>
-                  <View style={styles2.BottomViewStyle4}>
-                    <Text style={styles2.BottomTextStyle1}>
-                      Premium Paketler
-                    </Text>
-                  </View>
-                  <View style={styles2.BottomViewStyle5}>
-                    <Image source={Arrow} style={styles2.BottomImageStyle2} />
-                  </View>
-                </TouchableOpacity>
+              <View style={styles2.ContentViewStyle2}>
+                <View style={styles2.ContentViewStyle4}>
+                  <Text style={styles2.ContentTextStyle1}>Telefon</Text>
+                  <Text style={styles2.ContentTextStyle2}>
+                    {profile && profile.phone ? profile.phone : 'telyok'}
+                  </Text>
+                  <TouchableOpacity style={styles2.ContentButtonStyle}>
+                    <Text style={styles2.ContentTextStyle3}>Goster</Text>
+                  </TouchableOpacity>
+                </View>
+                <View style={styles2.ContentViewStyle4} />
+                <View style={styles2.ContentViewStyle4}>
+                  <Text style={styles2.ContentTextStyle1}>İnstagram</Text>
+                  <Text style={styles2.ContentTextStyle2}>@*******</Text>
+                  <TouchableOpacity style={styles2.ContentButtonStyle}>
+                    <Text style={styles2.ContentTextStyle3}>Goster</Text>
+                  </TouchableOpacity>
+                </View>
               </View>
             </View>
           </View>
@@ -552,6 +590,25 @@ class Profile extends React.Component {
   }
 }
 const styles1 = StyleSheet.create({
+  itemContentStyle2: {width: '60%'},
+  linearGradient: {
+    borderRadius: 6,
+    paddingVertical: 6,
+    flexDirection: 'row',
+  },
+  itemContentStyle3: {
+    width: '50%',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  genderImage: {width: 17, height: 17},
+  buttonText: {
+    fontSize: 13,
+    fontFamily: 'Gill Sans',
+    textAlign: 'center',
+    color: '#ffffff',
+  },
+
   HeaderContainer: {
     height: 70,
     backgroundColor: '#F3F3FB',
@@ -565,12 +622,18 @@ const styles1 = StyleSheet.create({
     alignItems: 'flex-end',
     justifyContent: 'center',
   },
-  HeaderButtonStyle: {paddingVertical: 5, paddingHorizontal: 10},
-  HeaderViewStyle2: {
+  HeaderViewStyle11: {
     flex: 2,
     height: '100%',
     alignItems: 'center',
     justifyContent: 'center',
+  },
+  cityStyle: {fontSize: 12, color: '#000000', fontWeight: 'bold'},
+  HeaderButtonStyle: {paddingVertical: 5, paddingHorizontal: 10},
+  HeaderViewStyle2: {
+    flex: 5,
+    height: '100%',
+    alignItems: 'center',
     flexDirection: 'row',
   },
   HeaderTitleStyle: {
@@ -587,194 +650,44 @@ const styles2 = StyleSheet.create({
     marginBottom: 80,
     alignItems: 'center',
   },
-  ProfileView: {
-    position: 'absolute',
-    width: calcWidth(92),
-    height: calcHeight(25),
-    zIndex: 3,
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 5,
-    },
-    shadowOpacity: 0.34,
-    shadowRadius: 6.27,
-    elevation: 10,
-    backgroundColor: '#ffffff',
-    marginTop: 10,
-    borderRadius: 10,
-  },
-  ProfileViewStyle1: {
-    flex: 2,
-    overflow: 'hidden',
-    flexDirection: 'row',
-  },
-  ProfileViewStyle3: {
-    flex: 6,
-    overflow: 'hidden',
-    flexDirection: 'row',
-  },
-  ProfileViewStyle4: {
-    flex: 9,
-    overflow: 'hidden',
-    flexDirection: 'row',
-  },
-  ProfileViewStyle9: {
-    height: '91%',
-    width: '100%',
-    overflow: 'hidden',
-    justifyContent: 'center',
-  },
-  ProfileTextStyle1: {
-    color: '#4A4A4A',
-    fontSize: 24,
-    fontWeight: 'bold',
-    marginVertical: 10,
-    marginLeft: 20,
-  },
-  ProfileTextStyle2: {color: '#C1C0C9', fontSize: 15, marginLeft: 20},
-  ProfileViewStyle5: {
-    flex: 2,
-    overflow: 'hidden',
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  ProfileTouchStyle: {padding: 10},
-  ProfileViewStyle6: {
-    height: '91%',
-    width: '100%',
-    overflow: 'hidden',
-  },
-  ProfileViewStyle7: {
-    top: 10,
-    left: 5,
-    position: 'absolute',
-    height: calcWidth(26),
-    width: calcWidth(26),
-    borderRadius: calcWidth(26),
-    overflow: 'hidden',
-  },
-  profileImageStyle: {
-    width: '100%',
-    height: '100%',
-    overflow: 'hidden',
-    borderRadius: calcWidth(25),
-  },
-  profileImageStyle2: {
-    width: calcWidth(4),
-    height: calcWidth(4),
-    resizeMode: 'contain',
-  },
-  ProfileViewStyle8: {
-    bottom: 20,
-    right: 20,
-    position: 'absolute',
-    height: calcWidth(8),
-    width: calcWidth(8),
-    borderRadius: calcWidth(8),
-    overflow: 'hidden',
-    borderWidth: 3,
-    borderColor: 'white',
-  },
-  GradientStyle2: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  profileImageStyle1: {
-    width: '100%',
-    height: '100%',
-    overflow: 'hidden',
-    borderRadius: calcWidth(25),
-  },
-  ProfileViewStyle2: {
-    flex: 1,
-    overflow: 'hidden',
-    flexDirection: 'row',
-  },
-  ProfileViewStyle10: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  ProfileTextStyle3: {fontSize: 13, color: '#C2C4CA'},
-  ProfileTextStyle4: {fontSize: 21, color: '#262628'},
-  Top: {flex: 1, width: '100%', zIndex: 0},
-  GradientStyle1: {
-    flex: 1,
+
+  Top: {flex: 1.5, width: '100%', zIndex: 0, borderWidth: 1},
+  Center: {
+    flex: 0.5,
     width: '100%',
   },
-  Content: {flex: 2, width: '100%'},
+  Content: {flex: 2, width: '100%', paddingHorizontal: 35},
   ContentViewStyle1: {
     flex: 0.5,
-    paddingHorizontal: 35,
+    justifyContent: 'center',
   },
   ContentViewStyle2: {
     flex: 1,
-    paddingHorizontal: 35,
+    flexDirection: 'row',
   },
   ContentViewStyle3: {
-    flex: 1,
+    flex: 0.5,
     flexDirection: 'row',
   },
   ContentViewStyle4: {
     flex: 1,
+    justifyContent: 'center',
   },
   ContentTextStyle1: {fontSize: 19, color: '#7755CD', fontWeight: 'bold'},
   ContentTextStyle2: {fontSize: 15, color: '#B8B8B8'},
-  Bottom: {
-    flex: 1,
-    width: '100%',
-    alignItems: 'center',
-    justifyContent: 'center',
+  ContentViewStyle5: {
+    flex: 0.5,
+    paddingHorizontal: 25,
   },
-  BottomViewStyle1: {
-    height: '90%',
-    width: '94%',
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 5,
-    },
-    shadowOpacity: 0.34,
-    shadowRadius: 6.27,
-    elevation: 10,
-    backgroundColor: '#ffffff',
+  ContentButtonStyle: {
     marginTop: 10,
-    borderRadius: 10,
-  },
-  BottomViewStyle2: {
-    flex: 1,
-    flexDirection: 'row',
-    borderBottomWidth: 0.5,
-    borderColor: '#D8D8D8',
-  },
-  BottomViewStyle3: {
-    flex: 1,
+    backgroundColor: '#7755CD',
+    paddingVertical: 1,
+    borderRadius: 50,
     alignItems: 'center',
     justifyContent: 'center',
   },
-  BottomViewStyle4: {
-    flex: 3,
-    justifyContent: 'center',
-  },
-  BottomViewStyle5: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  BottomImageStyle1: {
-    width: calcWidth(9),
-    height: calcWidth(9),
-    resizeMode: 'contain',
-  },
-  BottomTextStyle1: {fontSize: 20, color: '#262628'},
-  BottomImageStyle2: {
-    width: calcWidth(5),
-    height: calcWidth(5),
-    resizeMode: 'contain',
-  },
+  ContentTextStyle3: {fontSize: 25, color: '#ffffff'},
 });
 const mapStateToProps = (state) => {
   return {
@@ -788,4 +701,4 @@ const mapDispatchToProps = {
   LikedMe,
   ILiked,
 };
-export default connect(mapStateToProps, mapDispatchToProps)(Profile);
+export default connect(mapStateToProps, mapDispatchToProps)(Profilenew);

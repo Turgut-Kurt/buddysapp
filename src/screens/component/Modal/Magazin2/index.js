@@ -8,7 +8,7 @@ import Veya from '../Mcomponent/veyaText';
 import PaymentText from '../Mcomponent/paymentText';
 import MagazinFooter from '../Mcomponent/MagazinFooter';
 import Magazin2Packet from '../Mcomponent/Magazin2Packet';
-import MagazinTop from '../Mcomponent/Magazin1Top';
+import Magazin2Top from '../Mcomponent/Magazin2Top';
 import hepsi from '../../../../assets/images/hepsi.png';
 class Magazin2 extends Component {
   render() {
@@ -23,7 +23,7 @@ class Magazin2 extends Component {
             <Image source={hepsi} />
           </View>
           <View style={styles.MViewStyle2}>
-            <MagazinTop />
+            <Magazin2Top />
           </View>
           <View style={styles.MViewStyle3}>
             <Text style={styles.TextStyle2}>

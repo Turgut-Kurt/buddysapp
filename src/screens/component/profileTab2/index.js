@@ -16,7 +16,7 @@ import Tab from '../../../assets/tab1user3.png';
 import PremiumSmall from '../../../assets/images/premiumsmall.png';
 class ProfileTab2 extends Component {
   goProfile = () => {
-    NavigationService.navigate('Profile', {items: this.props});
+    NavigationService.navigate('Profilenew', {items: this.props});
   };
   renderItemContent = () => {
     const {username, first_name, similar_rate, profile} = this.props;
@@ -90,11 +90,7 @@ class ProfileTab2 extends Component {
           onPress={this.goProfile}
           disabled={!vip}>
           {!vip ? (
-            <ImageBackground
-              style={styles.image1}
-              source={
-                profile && profile.photo ? {uri: profile.photo} : NoUserPhoto
-              }>
+            <ImageBackground style={styles.image1} source={Tab}>
               <View style={styles.ViewStyle1}>
                 <View style={styles.ViewStyle2}>
                   <View style={styles.ViewStyle3}>
@@ -123,7 +119,9 @@ class ProfileTab2 extends Component {
       );
     } else {
       return (
-        <TouchableOpacity style={styles.backgroundView}>
+        <TouchableOpacity
+          style={styles.backgroundView}
+          onPress={this.goProfile}>
           {this.renderItemContent()}
         </TouchableOpacity>
       );

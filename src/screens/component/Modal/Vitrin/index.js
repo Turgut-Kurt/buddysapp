@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {Text, View, Image} from 'react-native';
+import {Text, View, ImageBackground, Image} from 'react-native';
 import Modal from 'react-native-modal';
 import styles from './style';
 import BuyButton from '../Mcomponent/buyNowbutton';
@@ -8,9 +8,10 @@ import Veya from '../Mcomponent/veyaText';
 import PaymentText from '../Mcomponent/paymentText';
 
 import MagazinFooter from '../Mcomponent/MagazinFooter';
-import MagazinPacket from '../Mcomponent/MagazinPacket';
+import VitrinPacket from '../Mcomponent/VitrinPacket';
 import VitrinTop from '../Mcomponent/VitrinTop';
-import Match from '../../../../assets/images/match.png';
+import Oval from '../../../../assets/images/Oval.png';
+import premium from '../../../../assets/images/premium.png';
 class Vitrin extends Component {
   render() {
     const {show, handleClose} = this.props;
@@ -21,25 +22,29 @@ class Vitrin extends Component {
         swipeDirection="left">
         <View style={styles.MViewStyle1}>
           <View style={styles.absView}>
-            <Image source={Match} />
+            <View style={styles.absinView}>
+              <ImageBackground source={Oval} style={styles.imgBackStyle}>
+                <Text style={styles.backimgTextStyle}>
+                  Vitrin’de Yerinizi Alin
+                </Text>
+              </ImageBackground>
+              <Image source={premium} style={styles.tacImageStyle} />
+            </View>
           </View>
           <View style={styles.MViewStyle2}>
             <VitrinTop />
           </View>
           <View style={styles.MViewStyle3}>
             <Text style={styles.TextStyle2}>
-              Sınırsız mesaj hakkın olsun.{'\n'}
-              Çevrendeki yeni kişilerle tanış.{'\n'}
-              Sınırsız beğeni hakkın olsun.{'\n'} Seni beğenenleri anında gör.
-              {'\n'}
-              Abonelik aylık yenilenecektir.{'\n'} Dilediğin zaman aboneliği
-              iptal et.
+              Vitrine Çık ve popülerliği yakala!{'\n'}
+              Bütün ilgileri üzerine topla!{'\n'}
+              Havalı Görün Sohbetin keyfine bak!
             </Text>
           </View>
           <View style={styles.MViewStyle4}>
-            <MagazinPacket price={'59.99'} mounthNumber={'1'} />
-            <MagazinPacket Pro price={'159.99'} mounthNumber={'6'} />
-            <MagazinPacket price={'99.99'} mounthNumber={'3'} />
+            <VitrinPacket price={'59.99'} numberText={'500'} />
+            <VitrinPacket Pro price={'159.99'} numberText={'1000'} />
+            <VitrinPacket price={'99.99'} numberText={'250'} />
           </View>
           <View style={styles.MViewStyle5}>
             <View style={styles.MViewStyle13}>
