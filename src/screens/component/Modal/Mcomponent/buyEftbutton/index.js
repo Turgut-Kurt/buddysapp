@@ -4,7 +4,7 @@ import LinearGradient from 'react-native-linear-gradient';
 class Index extends Component {
   render() {
     return (
-      <TouchableOpacity style={styles.Container}>
+      <TouchableOpacity style={styles.Container} >
         <LinearGradient
           start={{x: 0.0, y: 1.0}}
           end={{x: 1.0, y: 1.0}}

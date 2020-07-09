@@ -94,6 +94,15 @@ export default class Settings extends React.Component {
                 style={{width: 20, height: 20}}
               />
             </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.button}
+              onPress={() => navigate('PhoneChange')}>
+              <Text style={{flex: 1}}>Telefon Ekle</Text>
+              <Image
+                source={require('../../assets/images/next.png')}
+                style={{width: 20, height: 20}}
+              />
+            </TouchableOpacity>
             <Text style={styles.groupText}>Diğer</Text>
             <TouchableOpacity
               style={styles.button}
@@ -141,15 +150,15 @@ export default class Settings extends React.Component {
                 });
             }}
           />
-          <ShopButton
-            text="Çıkış Yap"
-            color="#533B8F"
-            fontColor={'white'}
-            icon={false}
-            onPress={() => {
-              this.logout();
-            }}
-          />
+          {/*<ShopButton*/}
+          {/*  text="Çıkış Yap"*/}
+          {/*  color="#533B8F"*/}
+          {/*  fontColor={'white'}*/}
+          {/*  icon={false}*/}
+          {/*  onPress={() => {*/}
+          {/*    this.logout();*/}
+          {/*  }}*/}
+          {/*/>*/}
           <Text style={{width: '100%', textAlign: 'center'}}>
             Destek için info@buddyapptr.com
           </Text>

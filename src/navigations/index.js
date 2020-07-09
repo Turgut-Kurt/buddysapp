@@ -17,6 +17,7 @@ import InfoChange from '../screens/InfoChange';
 import PassChange from '../screens/PassChange';
 import EpostaChange from '../screens/EpostaChange';
 import InstagramChange from '../screens/InstagramChange';
+import PhoneChange from '../screens/PhoneChange';
 import Action from '../screens/action';
 import ShopContainer from '../screens/Shop/ShopContainer';
 import SolvedQuestions from '../screens/SolvedQuestions';
@@ -36,6 +37,7 @@ const AppStack = createStackNavigator(
     InfoChange,
     PassChange,
     InstagramChange,
+    PhoneChange,
     Action,
     Shop: ShopContainer,
     SolvedQuestions,

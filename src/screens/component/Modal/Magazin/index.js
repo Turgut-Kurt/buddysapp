@@ -49,7 +49,7 @@ class Magazin extends Component {
               <Veya />
             </View>
             <View style={styles.MViewStyle13}>
-              <BuyEftButton />
+              <BuyEftButton  />
             </View>
             <View style={styles.MViewStyle14}>
               <PaymentText />

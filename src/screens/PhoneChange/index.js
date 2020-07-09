@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, {Component} from 'react';
 import {
   KeyboardAvoidingView,
   View,
@@ -10,34 +10,34 @@ import {
   ToastAndroid,
 } from 'react-native';
 import styles from './styles';
-import { connect } from 'react-redux';
-import { axiosInstance } from '../../utils/Api';
+import {connect} from 'react-redux';
+import {axiosInstance} from '../../utils/Api';
 
-class InstagramChange extends Component {
+class PhoneChange extends Component {
   constructor(props) {
     super(props);
     this.state = {
       loading: false,
       id: null,
-      instagram: '',
-      u: ''
+      phone: '',
+      u: '',
     };
   }
 
   componentDidMount = async () => {
-    const { userId } = this.props.SignInReducer;
-    this.setState({ loading: true });
+    const {userId} = this.props.SignInReducer;
+    this.setState({loading: true});
     try {
       const getUser = await axiosInstance.get(`api/users/${userId}/`);
       const user = getUser.data;
       this.setState({
         id: user.id,
-        instagram: user.profile.instagram,
+        phone: user.profile.phone,
         loading: false,
-        u: user
+        u: user,
       });
     } catch (e) {
-      this.setState({ loading: false });
+      this.setState({loading: false});
       console.log(e);
     }
   };
@@ -48,10 +48,10 @@ class InstagramChange extends Component {
         <Text style={styles.label}>{label}</Text>
         <TextInput
           style={styles.input}
-          placeholder={`@${title ? title : ''}`}
+          placeholder={`0${title ? title : ''}`}
           placeholderTextColor="#7e7e7e"
           value={this.state[name]}
-          onChangeText={val => this.setState({ [name]: val })}
+          onChangeText={(val) => this.setState({[name]: val})}
         />
         <Text>Sadece Vip Abonelikler</Text>
       </View>
@@ -59,19 +59,17 @@ class InstagramChange extends Component {
   };
 
   saveChanged = async () => {
-    const { id, instagram, u } = this.state;
+    const {id, phone, u} = this.state;
 
-    const replaceInstagram = instagram.includes('@')
-      ? instagram.replace('@', '')
-      : instagram;
-    this.setState({ loading: true });
-    console.log('u' + instagram)
-    console.log(u)
-    if (u.is_vip) {
+    const replacePhone = phone.includes('') ? phone.replace('', '') : phone;
+    this.setState({loading: true});
+    console.log('u' + phone);
+    console.log(u);
+    if (u.is_vip === true) {
       try {
         await axiosInstance.put(`/api/users/${id}/`, {
           profile: {
-            instagram: `@${replaceInstagram.toLowerCase().replace(' ', '')}`,
+            phone: `${replacePhone.toLowerCase().replace(' ', '')}`,
           },
         });
         ToastAndroid.show(
@@ -79,9 +77,9 @@ class InstagramChange extends Component {
           ToastAndroid.CENTER,
           ToastAndroid.LONG,
         );
-        this.setState({ loading: false });
+        this.setState({loading: false});
       } catch (e) {
-        this.setState({ loading: false });
+        this.setState({loading: false});
         ToastAndroid.show(
           'Bir Sorun Oluştu',
           ToastAndroid.CENTER,
@@ -90,12 +88,12 @@ class InstagramChange extends Component {
         console.log(e);
       }
     } else {
-      this.props.navigation.navigate('Shop')
+      this.props.navigation.navigate('Shop');
     }
   };
 
   render() {
-    const { loading, profile } = this.state;
+    const {loading, profile} = this.state;
     console.log(this.state);
     return (
       <KeyboardAvoidingView style={styles.wrapper}>
@@ -108,28 +106,25 @@ class InstagramChange extends Component {
               source={require('../../assets/images/back.png')}
             />
           </TouchableOpacity>
-          <Text style={styles.text}>İnstagram</Text>
+          <Text style={styles.text}>Telefon</Text>
         </View>
-        {this.input('İnstagram', profile && profile.instagram, 'instagram')}
+        {this.input('Telefon', profile && profile.phone, 'phone')}
         <TouchableOpacity style={styles.button} onPress={this.saveChanged}>
           {loading ? (
             <ActivityIndicator style={styles.buttonTitle} color="#FFFFFF" />
           ) : (
-              <Text style={styles.buttonTitle}>Kaydet</Text>
-            )}
+            <Text style={styles.buttonTitle}>Kaydet</Text>
+          )}
         </TouchableOpacity>
       </KeyboardAvoidingView>
     );
   }
 }
 
-const mapStateToProps = state => {
+const mapStateToProps = (state) => {
   return {
     SignInReducer: state.SignInReducer,
   };
 };
 
-export default connect(
-  mapStateToProps,
-  {},
-)(InstagramChange);
+export default connect(mapStateToProps, {})(PhoneChange);
