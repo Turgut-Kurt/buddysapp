@@ -27,11 +27,14 @@ class Trend extends Component {
     super(props);
     this.state = {
       vip: null,
+      list: props.ShowcaseReducer.data,
     };
   }
 
   componentDidMount = async () => {
     const {userId} = this.props.SignInReducer;
+    const {next: n0, data: d0} = this.props.ShowcaseReducer;
+    // this.setState({list: d0});
     await this.getCurrentUser(userId);
     await this.props.GetShowcase();
     await this.props.GetGivesWantedAnswersUsers();
@@ -70,6 +73,8 @@ class Trend extends Component {
               keyExtractor={(item) => item.id.toString()}
               numColumns={2}
               data={data}
+              onEndReached={this.getMoreUsers}
+              onEndReachedThreshold={0.5}
               renderItem={({item, index}) => (
                 <ProfileTab2
                   key={`${type}_${index}`}
@@ -90,9 +95,26 @@ class Trend extends Component {
     return await AsyncStorage.getItem('distance');
   };
 
+  getMoreUsers = async () => {
+    const {next: n0, data: d0} = this.props.ShowcaseReducer;
+    const splitUrl = n0.split('/');
+    console.log('split', splitUrl);
+    let url = splitUrl[3] + '/' + splitUrl[4] + '/' + splitUrl[5];
+    console.log('URL', url);
+    const user = await axiosInstance.get(url);
+    this.setState({list: [...d0, ...user.data.results]});
+    console.log('MORE', user);
+  };
+
   render() {
     //const {loading: l0, error: e0, data: d0} = this.props.VipReducer;
-    const {loading: l0, error: e0, data: d0} = this.props.ShowcaseReducer;
+    const {
+      loading: l0,
+      error: e0,
+      data: d0,
+      next: n0,
+    } = this.props.ShowcaseReducer;
+    console.log('TREND NEXT', n0);
     /*const {
       loading: l1,
       error: e1,
@@ -111,9 +133,10 @@ class Trend extends Component {
       data: d4,
     } = this.props.LastOnlineUsersReducer;*/
     return (
-      <ScrollView style={{width: '100%'}} showsVerticalScrollIndicator={false}>
-        {this.renderItems(l0, e0, d0, 'Showcase')}
-      </ScrollView>
+      <View>{this.renderItems(l0, e0, this.state.list, 'Showcase')}</View>
+      // <ScrollView style={{width: '100%'}} showsVerticalScrollIndicator={false}>
+
+      // </ScrollView>
     );
   }
 }
