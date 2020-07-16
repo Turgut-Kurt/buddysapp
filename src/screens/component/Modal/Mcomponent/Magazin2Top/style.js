@@ -1,42 +1,23 @@
 import {StyleSheet} from 'react-native';
-
+import {calculate, calcWidth} from '../../../../../Dimensions';
 const styles = StyleSheet.create({
   GradientStyle1: {
     flex: 1,
     alignItems: 'center',
     justifyContent: 'flex-end',
   },
+  backImageStyle: {height: '100%', width: '100%', flexDirection: 'row'},
+  ViewStyle1: {flex: 1, justifyContent: 'center'},
+  ViewStyle2: {flex: 1.2, flexDirection: 'row'},
+  ViewStyle4: {flex: 1},
+  ViewStyle5: {flex: 2.3, paddingTop: calculate(1.2)},
+  ViewStyle3: {aspectRatio: 1},
   imageStyle1: {
-    left: 1,
-    top: 40,
-    position: 'absolute',
-    width: 95,
-    height: 95,
-    borderRadius: 95,
-    zIndex: 1,
+    width: '100%',
+    height: '100%',
+    overflow: 'hidden',
+    borderRadius: calculate(20),
   },
-  imageStyle2: {
-    position: 'absolute',
-    right: 15,
-    top: 50,
-    width: 90,
-    height: 90,
-    borderRadius: 116,
-    zIndex: 2,
-  },
-  imageStyle3: {
-    width: 110,
-    height: 110,
-    borderRadius: 140,
-    zIndex: 3,
-  },
-  imageStyle4: {
-    position: 'absolute',
-    top: 10,
-    width: 60,
-    height: 60,
-    borderRadius: 116,
-    zIndex: 2,
-  },
+
 });
 export default styles;

@@ -1,5 +1,5 @@
 import {StyleSheet} from 'react-native';
-import {calcHeight, calcWidth} from '../../../Dimensions';
+import {calcHeight, calculate, calcWidth} from '../../../Dimensions';
 
 const styles = StyleSheet.create({
   backgroundView: {
@@ -19,19 +19,19 @@ const styles = StyleSheet.create({
   },
   nameText: {
     fontWeight: 'bold',
-    fontSize: 13,
+    fontSize: calculate(2.3),
     color: '#ffffff',
     width: '100%',
     textAlign: 'center',
   },
   linearGradient: {
-    borderRadius: 15,
-    paddingVertical: 3,
+    borderRadius: calculate(2.6),
+    paddingVertical: calculate(0.5),
     flexDirection: 'row',
   },
-  genderImage: {width: 17, height: 17},
+  genderImage: {width: calculate(2.8), height: calculate(2.8)},
   buttonText: {
-    fontSize: 13,
+    fontSize: calculate(2.1),
     fontFamily: 'Gill Sans',
     textAlign: 'center',
     color: '#ffffff',
@@ -47,12 +47,13 @@ const styles = StyleSheet.create({
     width: '100%',
     height: '100%',
     overflow: 'hidden',
-    borderRadius: 150,
+    borderRadius: calculate(25),
   },
   itemContentStyle: {
     height: '100%',
     alignItems: 'center',
     justifyContent: 'flex-end',
+    width: '100%',
   },
   itemContentStyle1: {
     width: '92%',
@@ -66,16 +67,16 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  textStyle1: {fontSize: 15, textAlign: 'center', color: '#262628'},
+  textStyle1: {fontSize: calculate(2.6), textAlign: 'center', color: '#262628'},
   linearGradient2: {
-    borderRadius: 15,
-    paddingVertical: 7,
+    borderRadius: calculate(2.6),
+    paddingVertical: calculate(1.3),
     alignItems: 'center',
     justifyContent: 'center',
     flexDirection: 'row',
   },
   textStyle2: {
-    fontSize: 13,
+    fontSize: calculate(2.1),
     textAlign: 'center',
     color: '#ffffff',
     fontWeight: 'bold',
@@ -84,7 +85,7 @@ const styles = StyleSheet.create({
     width: '92%',
     height: '92%',
     backgroundColor: 'rgba(255, 255, 255, 0.8)',
-    borderRadius: 5,
+    borderRadius: calculate(1),
     padding: calcWidth(8),
   },
   ViewStyle2: {
@@ -111,6 +112,14 @@ const styles = StyleSheet.create({
   ViewStyle5: {
     height: '30%',
     width: '100%',
+    justifyContent: 'flex-end',
+  },
+  ekView: {flex: 1, width: '100%', flexDirection: 'row'},
+  ekViewinView1: {flex: 1.52, justifyContent: 'flex-end'},
+  ekViewinView2: {flex: 1, justifyContent: 'flex-end'},
+  ekViewinView2inView: {
+    aspectRatio: 1,
+    alignItems: 'center',
     justifyContent: 'flex-end',
   },
 });

@@ -1,41 +1,38 @@
 import React, {Component} from 'react';
-import {Text, View, StyleSheet} from 'react-native';
+import {Text, View, StyleSheet, TouchableOpacity} from 'react-native';
 import {calculate} from '../../../../../Dimensions';
 class Index extends Component {
   renderItem = () => {
-    const {price, mounthNumber, Pro} = this.props;
+    const {price, numberText} = this.props;
     return (
       <View
         style={
-          Pro
+          this.props.pressStatus === true
             ? [styles.MViewStyle1, {justifyContent: 'flex-start'}]
             : styles.MViewStyle1
         }>
         <View
-          style={Pro ? [styles.MViewStyle2, {top: '61%'}] : styles.MViewStyle2}>
+          style={
+            this.props.pressStatus === true
+              ? [styles.MViewStyle2, {top: '61%'}]
+              : styles.MViewStyle2
+          }>
           <Text
             style={
-              Pro
+              this.props.pressStatus === true
                 ? [styles.TextStyle1, {backgroundColor: '#0A916D'}]
                 : styles.TextStyle1
             }>
             {price}
           </Text>
         </View>
-        <View style={styles.MViewStyle3}>
-          <View style={styles.MViewStyle4}>
-            <Text style={styles.TextStyle2}>
-              {mounthNumber}
-              <Text style={styles.TextStyle4}>AY</Text>
-            </Text>
-          </View>
-          <View style={styles.MViewStyle5}>
-            <Text style={styles.TextStyle5}>
-              Sadece {'\n'}
-              {mounthNumber} AY
-            </Text>
-          </View>
-        </View>
+        <TouchableOpacity
+          style={styles.MViewStyle3}
+          onPress={this.props.onPress}>
+          <Text style={styles.TextStyle2}>{numberText}</Text>
+          <Text style={styles.TextStyle4}>Gosterim</Text>
+          <Text style={styles.TextStyle5}>{numberText} profil gösterimi</Text>
+        </TouchableOpacity>
       </View>
     );
   };
@@ -90,19 +87,23 @@ const styles = StyleSheet.create({
     shadowRadius: 6.27,
     elevation: 10,
     backgroundColor: 'white',
+    alignItems: 'center',
   },
   MViewStyle4: {flex: 1, alignItems: 'center', justifyContent: 'center'},
   TextStyle2: {
-    fontSize: calculate(5.1),
+    fontSize: calculate(4.3),
     fontFamily: 'Montserrat-Bold',
     textAlign: 'center',
   },
-  TextStyle4: {fontSize: calculate(3.2), color: '#F61F48'},
-  MViewStyle5: {flex: 1.2, alignItems: 'center'},
+  TextStyle4: {
+    fontSize: calculate(2.6),
+    color: '#F61F48',
+    lineHeight: calculate(3),
+  },
+  MViewStyle5: {flex: 1.2},
   TextStyle5: {
-    fontSize: calculate(2.4),
+    fontSize: calculate(2.3),
     color: '#626260',
-    fontFamily: 'Montserrat',
     textAlign: 'center',
     marginVertical: calculate(0.5),
   },

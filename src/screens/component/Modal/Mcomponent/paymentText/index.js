@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
 import {Text, StyleSheet, View} from 'react-native';
+import {calculate} from '../../../../../Dimensions';
 class Index extends Component {
   render() {
     return (
@@ -14,10 +15,14 @@ class Index extends Component {
 const styles = StyleSheet.create({
   Container: {
     flex: 1,
-    marginHorizontal: 10,
-    justifyContent: 'center',
+    marginHorizontal: calculate(0.3),
     alignItems: 'center',
   },
-  TextStyle1: {fontSize: 10, color: '#262628', textAlign: 'center'},
+  TextStyle1: {
+    fontSize: calculate(1.6),
+    color: '#262628',
+    textAlign: 'center',
+    fontFamily: 'Montserrat-SemiBold',
+  },
 });
 export default Index;

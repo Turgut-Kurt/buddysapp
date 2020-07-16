@@ -151,7 +151,7 @@ class Like extends React.Component {
               {this.renderFlatList(l1, e1, d1, !this.state.isVip)}
             </View>
 
-            <View style={[styles.groupView, { display: 'none' }]}>
+            <View style={[styles.groupView, { display: 'none' ,borderWidth:3}]}>
               <View style={styles.groupViewHeader}>
                 <Image
                   style={{ width: 30, height: 30, marginRight: 10 }}

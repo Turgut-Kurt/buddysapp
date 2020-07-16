@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import LinearGradient from 'react-native-linear-gradient';
 import {ImageBackground, StyleSheet, Text, View} from 'react-native';
 import MagazinFooterimage from '../../../../../assets/images/footer_image.png';
-import {calcWidth} from '../../../../../Dimensions';
+import {calculate, calcWidth} from '../../../../../Dimensions';
 
 class Index extends Component {
   render() {
@@ -16,7 +16,7 @@ class Index extends Component {
           style={styles.GradientStyle1}
         />
         <ImageBackground style={styles.image} source={MagazinFooterimage}>
-          <Text style={styles.TextStyle1}>0555 555 55 55 </Text>
+          <Text style={styles.TextStyle1}>0552 350 9754</Text>
         </ImageBackground>
       </View>
     );
@@ -43,7 +43,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   TextStyle1: {
-    fontSize: 22,
+    fontSize: calculate(3.9),
     color: '#ffffff',
   },
 });

@@ -53,7 +53,7 @@ const styles = StyleSheet.create({
     alignItems: 'flex-end',
     justifyContent: 'flex-end',
   },
-  phoneSyle: {width: calculate(6.5), height: calculate(9)},
+  phoneSyle: {width: calculate(8), height: calculate(8)},
   backImageinView1inView2: {flex: 0.9},
   backImageinView2: {flex: 4.5, paddingTop: calculate(3)},
   TextStyleHeader: {

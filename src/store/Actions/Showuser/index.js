@@ -1,16 +1,16 @@
  import {axiosInstance as api} from '../../../utils/Api';
-import {SHOWCASE_PENDING, SHOWCASE_FULFILLED, SHOWCASE_REJECTED} from './types';
+import {SHOWUSER_PENDING, SHOWUSER_FULFILLED, SHOWUSER_REJECTED} from './types';
 import {fetchingRequest, fetchingSuccess, fetchingFailure} from '../index';
 
-export const GetShowcase = () => {
+export const GetShowuser = () => {
   return async dispatch => {
-    dispatch(fetchingRequest(SHOWCASE_PENDING));
+    dispatch(fetchingRequest(SHOWUSER_PENDING));
     try {
-      const response = await api.get('action/find-users/?showcase=true');
-      const payload = await response.data;
-      dispatch(fetchingSuccess(SHOWCASE_FULFILLED, payload));
+      const response = await api.get('api/showusers/?vitrin=True');
+      const payload = await response.data.results;
+      dispatch(fetchingSuccess(SHOWUSER_FULFILLED, payload));
     } catch (error) {
-      dispatch(fetchingFailure(SHOWCASE_REJECTED, error.response.data));
+      dispatch(fetchingFailure(SHOWUSER_REJECTED, error.response.data));
     }
   };
 };

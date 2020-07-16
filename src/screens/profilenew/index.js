@@ -11,7 +11,7 @@ import {
   StyleSheet,
 } from 'react-native';
 import styles from './style';
-import {calcHeight, calcWidth} from '../../Dimensions';
+import {calcHeight, calculate, calcWidth} from '../../Dimensions';
 import {SliderBox} from 'react-native-image-slider-box';
 import {connect} from 'react-redux';
 import {Like} from '../../store/Actions/Like';
@@ -37,9 +37,9 @@ import Star from '../../assets/images/icons-star.png';
 import Backtac from '../../assets/images/backtac.png';
 import Arrow from '../../assets/images/arrow.png';
 import LinearGradient from 'react-native-linear-gradient';
-import Magazin2 from '../component/Modal/Magazin2';
-import Magazin from '../component/Modal/Magazin';
-import Vitrin from '../component/Modal/Vitrin';
+import Telefon from '../component/Modal/Telefon';
+import Telefon2 from '../component/Modal/Telefon2';
+import Magazin1 from '../component/Modal/Magazin1';
 import Voman from '../../assets/images/Gender-woman.png';
 import Man from '../../assets/images/Gender-man.png';
 class Profilenew extends React.Component {
@@ -53,34 +53,50 @@ class Profilenew extends React.Component {
       modalPhoto: '',
       modalPhotos: [],
       photo: '',
-      showMagazin2: false,
+      showPhone: false,
+      showInsta: false,
       showMagazin: false,
-      showVitrin: false,
+      is_pre: true,
+      is_phone: false,
+      is_insta: false,
+      isvisiblePhone: false,
+      isvisibleInsta: false,
     };
   }
-  showVitrin = () => {
-    this.setState({showVitrin: true});
+  showPhone = () => {
+    if (!this.state.is_phone) {
+      this.setState({showPhone: true});
+    } else {
+      this.setState({isvisiblePhone: !this.state.isvisiblePhone});
+    }
   };
 
-  hideVitrin = () => {
-    this.setState({showVitrin: false});
-  };
-  showMagazin2 = () => {
-    this.setState({showMagazin2: true});
+  hidePhone = () => {
+    this.setState({showPhone: false});
   };
 
-  hideMagazin2 = () => {
-    this.setState({showMagazin2: false});
+  showInsta = () => {
+    if (!this.state.is_insta) {
+      this.setState({showInsta: true});
+    } else {
+      this.setState({isvisibleInsta: !this.state.isvisibleInsta});
+    }
   };
-  showMagazin = () => {
+
+  hideInsta = () => {
+    this.setState({showInsta: false});
+  };
+  showMagazin1 = () => {
     this.setState({showMagazin: true});
   };
-
-  hideMagazin = () => {
+  hideMagazin1 = () => {
     this.setState({showMagazin: false});
   };
   componentDidMount = async () => {
     const detail = this.props.navigation.getParam('items');
+    console.log('*****************');
+    console.log(detail);
+    console.log('*****************');
     if (detail) {
       this.backHandler = BackHandler.addEventListener(
         'hardwareBackPress',
@@ -91,7 +107,12 @@ class Profilenew extends React.Component {
       );
     }
     if (detail) {
-      await this.setState({like: detail.is_liked ? true : false});
+      await this.setState({
+        like: detail.is_liked ? true : false,
+        is_insta: detail.is_insta,
+        is_pre: detail.is_pre,
+        is_phone: detail.is_phone,
+      });
       await this.likeFunc(detail.id);
     } else {
       this.getUserInfo();
@@ -190,7 +211,7 @@ class Profilenew extends React.Component {
     return (
       <SliderBox
         images={images}
-        sliderBoxHeight="90%"
+        sliderBoxHeight="100%"
         dotColor="#FFEE58"
         inactiveDotColor="#90A4AE"
         currentImageEmitter={(index) =>
@@ -351,6 +372,11 @@ class Profilenew extends React.Component {
         modalPhoto,
       } = this.state;
       let profile = detail.profile !== null ? detail.profile : {};
+      console.log('***********************');
+      console.log(this.state.is_phone);
+      console.log(this.state.is_phone);
+      console.log(this.state.is_phone);
+      console.log('***********************');
       function getAge(dateString) {
         var today = new Date();
         var birthDate = new Date(dateString);
@@ -362,26 +388,23 @@ class Profilenew extends React.Component {
         return age;
       }
       return (
-        <View style={{flex: 1, width: '100%'}}>
-          <Magazin
+        <View style={styles1.GlobalCont}>
+          <Magazin1
             show={this.state.showMagazin}
-            handleClose={this.hideMagazin}
+            handleClose={this.hideMagazin1}
           />
-          <Vitrin show={this.state.showVitrin} handleClose={this.hideVitrin} />
-          <Magazin2
-            show={this.state.showMagazin2}
-            handleClose={this.hideMagazin2}
-          />
+          <Telefon show={this.state.showPhone} handleClose={this.hidePhone} />
+          <Telefon2 show={this.state.showInsta} handleClose={this.hideInsta} />
           <View style={styles1.HeaderContainer}>
             <View style={styles1.HeaderViewStyle1}>
               <TouchableOpacity
                 style={styles1.HeaderButtonStyle}
                 onPress={this.handleBackButton}>
-                <Image source={leftback} />
+                <Image source={leftback} style={styles1.backButtonStyle} />
               </TouchableOpacity>
             </View>
             <View style={styles1.HeaderViewStyle2}>
-              <Text style={styles1.HeaderTitleStyle}>{detail.username}</Text>
+              <Text style={styles1.HeaderTitleStyle}>{detail.first_name}</Text>
             </View>
             <View style={styles1.HeaderViewStyle11}>
               <View style={styles1.itemContentStyle2}>
@@ -421,11 +444,10 @@ class Profilenew extends React.Component {
             </View>
           </View>
 
-          <View style={styles2.Container}>
-            <View style={styles2.Top}>
-              {this.renderImagesIc(detail)}
-            </View>
-            <View style={styles2.Center}>
+          <View style={styles1.Container}>
+            <View style={styles1.Top}>{this.renderImagesIc(detail)}</View>
+
+            <View style={styles1.Center}>
               <View style={styles.actionBar}>
                 {!currentUserLike && (
                   <>
@@ -531,46 +553,69 @@ class Profilenew extends React.Component {
                 borderColor: 'rgba(112, 112, 112, 0.18)',
               }}
             />
-            <View style={styles2.Content}>
-              <View style={styles2.ContentViewStyle1}>
-                <Text style={styles2.ContentTextStyle1}>Hakkında </Text>
-                <Text style={styles2.ContentTextStyle2}>
+
+            <View style={styles1.Content}>
+              <View style={styles1.ContentViewStyle1}>
+                <Text style={styles1.ContentTextStyle1}>Hakkında </Text>
+                <Text style={styles1.ContentTextStyle2}>
                   {profile && profile.about_me ? profile.about_me : 'yok'}
                 </Text>
               </View>
-              <View style={styles2.ContentViewStyle3}>
-                <View style={styles2.ContentViewStyle4}>
-                  <Text style={styles2.ContentTextStyle1}>Aradığı</Text>
-                  <Text style={styles2.ContentTextStyle2}>
+              <View style={styles1.ContentViewStyle3}>
+                <View style={styles1.ContentViewStyle4}>
+                  <Text style={styles1.ContentTextStyle1}>Aradığı</Text>
+                  <Text style={styles1.ContentTextStyle2}>
                     {profile.what_find
                       ? this.onWhatFind(profile.what_find)
                       : '...'}
                   </Text>
                 </View>
-                <View style={styles2.ContentViewStyle4} />
-                <View style={styles2.ContentViewStyle4}>
-                  <Text style={styles2.ContentTextStyle1}>Hobi</Text>
-                  <Text style={styles2.ContentTextStyle2}>
+                <View style={styles1.ContentViewStyle4} />
+                <View style={styles1.ContentViewStyle4}>
+                  <Text style={styles1.ContentTextStyle1}>Hobi</Text>
+                  <Text style={styles1.ContentTextStyle2}>
                     {profile && profile.hobbies ? profile.hobbies : 'hobiyok'}
                   </Text>
                 </View>
               </View>
-              <View style={styles2.ContentViewStyle2}>
-                <View style={styles2.ContentViewStyle4}>
-                  <Text style={styles2.ContentTextStyle1}>Telefon</Text>
-                  <Text style={styles2.ContentTextStyle2}>
-                    {profile && profile.phone ? profile.phone : 'telyok'}
+              <View style={styles1.ContentViewStyle2}>
+                <View style={styles1.ContentViewStyle4}>
+                  <Text style={styles1.ContentTextStyle1}>Telefon</Text>
+                  <Text style={styles1.ContentTextStyle2}>
+                    {profile && profile.phone && this.state.isvisiblePhone
+                      ? profile.phone
+                      : '***********'}
                   </Text>
-                  <TouchableOpacity style={styles2.ContentButtonStyle}>
-                    <Text style={styles2.ContentTextStyle3}>Goster</Text>
+                  <TouchableOpacity
+                    onPress={
+                      this.state.is_pre === false
+                        ? this.showMagazin1
+                        : this.showPhone
+                    }
+                    style={styles1.ContentButtonStyle}>
+                    <Text style={styles1.ContentTextStyle3}>
+                      {!this.state.isvisiblePhone ? 'Goster' : 'Gizle'}
+                    </Text>
                   </TouchableOpacity>
                 </View>
-                <View style={styles2.ContentViewStyle4} />
-                <View style={styles2.ContentViewStyle4}>
-                  <Text style={styles2.ContentTextStyle1}>İnstagram</Text>
-                  <Text style={styles2.ContentTextStyle2}>@*******</Text>
-                  <TouchableOpacity style={styles2.ContentButtonStyle}>
-                    <Text style={styles2.ContentTextStyle3}>Goster</Text>
+                <View style={styles1.ContentViewStyle4} />
+                <View style={styles1.ContentViewStyle4}>
+                  <Text style={styles1.ContentTextStyle1}>İnstagram</Text>
+                  <Text style={styles1.ContentTextStyle2}>
+                    {profile && profile.phone && this.state.isvisibleInsta
+                      ? '@ovcharka'
+                      : '***********'}
+                  </Text>
+                  <TouchableOpacity
+                    onPress={
+                      this.state.is_pre === false
+                        ? this.showMagazin1
+                        : this.showInsta
+                    }
+                    style={styles1.ContentButtonStyle}>
+                    <Text style={styles1.ContentTextStyle3}>
+                      {!this.state.isvisibleInsta ? 'Goster' : 'Gizle'}
+                    </Text>
                   </TouchableOpacity>
                 </View>
               </View>
@@ -590,27 +635,9 @@ class Profilenew extends React.Component {
   }
 }
 const styles1 = StyleSheet.create({
-  itemContentStyle2: {width: '60%'},
-  linearGradient: {
-    borderRadius: 6,
-    paddingVertical: 6,
-    flexDirection: 'row',
-  },
-  itemContentStyle3: {
-    width: '50%',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  genderImage: {width: 17, height: 17},
-  buttonText: {
-    fontSize: 13,
-    fontFamily: 'Gill Sans',
-    textAlign: 'center',
-    color: '#ffffff',
-  },
-
+  GlobalCont: {flex: 1, width: '100%'},
   HeaderContainer: {
-    height: 70,
+    height: calculate(12),
     backgroundColor: '#F3F3FB',
     justifyContent: 'center',
     alignItems: 'center',
@@ -622,14 +649,11 @@ const styles1 = StyleSheet.create({
     alignItems: 'flex-end',
     justifyContent: 'center',
   },
-  HeaderViewStyle11: {
-    flex: 2,
-    height: '100%',
-    alignItems: 'center',
-    justifyContent: 'center',
+  HeaderButtonStyle: {
+    paddingVertical: calculate(1),
+    paddingHorizontal: calculate(2),
   },
-  cityStyle: {fontSize: 12, color: '#000000', fontWeight: 'bold'},
-  HeaderButtonStyle: {paddingVertical: 5, paddingHorizontal: 10},
+  backButtonStyle: {width: calculate(3.5), height: calculate(4.5)},
   HeaderViewStyle2: {
     flex: 5,
     height: '100%',
@@ -639,31 +663,63 @@ const styles1 = StyleSheet.create({
   HeaderTitleStyle: {
     color: '#424649',
     textAlign: 'center',
-    fontWeight: 'bold',
-    fontSize: 35,
-    marginHorizontal: 10,
+    fontFamily: 'Montserrat-SemiBold',
+    fontSize: calculate(5.7),
+    marginLeft: calculate(2),
   },
-});
-const styles2 = StyleSheet.create({
+  HeaderViewStyle11: {
+    flex: 2,
+    height: '100%',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  itemContentStyle2: {width: '65%'},
+  linearGradient: {
+    borderRadius: calculate(1.2),
+    paddingVertical: calculate(1),
+    flexDirection: 'row',
+  },
+  itemContentStyle3: {
+    width: '50%',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  genderImage: {width: calculate(3), height: calculate(3)},
+  buttonText: {
+    fontSize: calculate(3),
+    fontFamily: 'Montserrat-SemiBold',
+    textAlign: 'center',
+    color: '#ffffff',
+  },
+  cityStyle: {
+    fontSize: calculate(2.2),
+    color: '#000000',
+    fontFamily: 'Montserrat-SemiBold',
+  },
   Container: {
     flex: 1,
-    marginBottom: 80,
+    marginBottom: calculate(13.5),
     alignItems: 'center',
   },
-
-  Top: {flex: 1.5, width: '100%', zIndex: 0, borderWidth: 1},
+  Top: {flex: 1.5, width: '100%', zIndex: 0},
   Center: {
     flex: 0.5,
     width: '100%',
   },
-  Content: {flex: 2, width: '100%', paddingHorizontal: 35},
+  Content: {flex: 2, width: '100%', paddingHorizontal: calculate(6)},
   ContentViewStyle1: {
     flex: 0.5,
     justifyContent: 'center',
   },
-  ContentViewStyle2: {
-    flex: 1,
-    flexDirection: 'row',
+  ContentTextStyle1: {
+    fontSize: calculate(3.2),
+    color: '#7755CD',
+    fontFamily: 'Montserrat-SemiBold',
+  },
+  ContentTextStyle2: {
+    fontSize: calculate(2.5),
+    fontFamily: 'Montserrat-Medium',
+    color: '#B8B8B8',
   },
   ContentViewStyle3: {
     flex: 0.5,
@@ -673,21 +729,23 @@ const styles2 = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
   },
-  ContentTextStyle1: {fontSize: 19, color: '#7755CD', fontWeight: 'bold'},
-  ContentTextStyle2: {fontSize: 15, color: '#B8B8B8'},
-  ContentViewStyle5: {
-    flex: 0.5,
-    paddingHorizontal: 25,
+  ContentViewStyle2: {
+    flex: 1,
+    flexDirection: 'row',
   },
   ContentButtonStyle: {
-    marginTop: 10,
+    marginTop: calculate(2),
     backgroundColor: '#7755CD',
-    paddingVertical: 1,
-    borderRadius: 50,
+    paddingVertical: calculate(0.3),
+    borderRadius: calculate(9),
     alignItems: 'center',
     justifyContent: 'center',
   },
-  ContentTextStyle3: {fontSize: 25, color: '#ffffff'},
+  ContentTextStyle3: {
+    fontSize: calculate(4),
+    color: '#ffffff',
+    fontFamily: 'Montserrat-Bold',
+  },
 });
 const mapStateToProps = (state) => {
   return {

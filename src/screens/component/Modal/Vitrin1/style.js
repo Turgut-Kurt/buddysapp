@@ -19,9 +19,9 @@ const styles = StyleSheet.create({
   },
   ImageViewFlex1: {flex: 1},
   ImageViewFlex2: {
-    flex: 1.2,
+    flex: 1.5,
     justifyContent: 'flex-end',
-    paddingBottom: calculate(2),
+    paddingBottom: calculate(8),
   },
   ImageViewFlex2inView: {
     aspectRatio: 1,
@@ -34,24 +34,43 @@ const styles = StyleSheet.create({
     borderRadius: calculate(20),
   },
   absView: {
-    width: '98%',
-    zIndex: 3,
+    width: '100%',
+    zIndex: 6,
     position: 'absolute',
     height: calculate(11),
     overflow: 'visible',
     alignSelf: 'center',
+    justifyContent: 'center',
     bottom: 0,
   },
   absViewImage: {
     width: '100%',
-    height: '100%',
+    resizeMode: 'contain',
     overflow: 'visible',
+  },
+  backimgTextStyle: {
+    position: 'absolute',
+    marginHorizontal: calculate(6.1),
+    lineHeight: calculate(5.8),
+    fontSize: calculate(6),
+    fontFamily: 'Montserrat-ExtraBoldItalic',
+    textAlign: 'center',
+    color: '#EF0061',
+  },
+  tacImageStyle: {
+    position: 'absolute',
+    top: -calculate(3),
+    right: calculate(5),
+    zIndex: 5,
+    width: calculate(6.3),
+    height: calculate(4.8),
+    transform: [{ rotate: '20deg' }]
   },
   MViewStyle2: {flex: 1, overflow: 'hidden'},
   FreeView: {flex: 0.2},
 
   CenterTextView: {
-    flex: 1.111,
+    flex: 1,
     overflow: 'hidden',
     paddingHorizontal: calculate(3.5),
     alignItems: 'center',
@@ -61,8 +80,13 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     fontFamily: 'Montserrat-Regular',
   },
-
-  PacketView: {flex: 1},
+  ekTextStyle2: {paddingTop: calculate(3.4)},
+  PacketView: {flex: 1.111},
+  extraPacketView: {
+    overflow: 'hidden',
+    marginHorizontal: calculate(1.3),
+    flexDirection: 'row',
+  },
   BottomView: {flex: 1.166},
   GradientStyle1: {
     flex: 1,

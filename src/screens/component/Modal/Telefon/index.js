@@ -1,20 +1,42 @@
 import React, {Component} from 'react';
-import {Text, View, Image, ImageBackground} from 'react-native';
+import {Text, View, Image, ImageBackground, ToastAndroid} from 'react-native';
 import Modal from 'react-native-modal';
 import styles from './style';
-import BuyButton from '../buyNowbutton';
-import BuyEftButton from '../buyEftbutton';
-import Veya from '../veyaText';
-import PaymentText from '../paymentText';
-import MagazinFooter from '../MagazinFooter';
-import Telefon1Packlet from '../Telefon1Packlet';
-import MagazinTop from '../Magazin1Top';
+import BuyButton from '../../Modal/Mcomponent/buyNowbutton';
+import BuyEftButton from '../../Modal/Mcomponent/buyEftbutton';
+import Veya from '../../Modal/Mcomponent/veyaText';
+import PaymentText from '../../Modal/Mcomponent/paymentText';
+import Telefon1Packlet from '../../Modal/Mcomponent/Telefon1Packlet';
 import LinearGradient from 'react-native-linear-gradient';
-import Gradback from '../../assets/gradback.png';
-import Match from '../../assets/match.png';
-import phone from '../../assets/phone.png';
-import MagazinFooterimage from '../../assets/footer_image.png';
+import Gradback from '../../../../assets/images/gradback.png';
+import Match from '../../../../assets/images/match.png';
+import phone from '../../../../assets/images/phone.png';
+import NavigationService from '../../../../services/NavigationService';
 class Telefon extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      pressStatus: false,
+    };
+  }
+  onPressFullPackage = () => {
+    this.setState({pressStatus: !this.state.pressStatus});
+  };
+  goShop() {
+    this.props.handleClose?.();
+    NavigationService.navigate('Shop');
+  }
+  onPressBuyNow = () => {
+    if (this.state.pressStatus === true) {
+      this.goShop();
+    } else {
+      ToastAndroid.showWithGravity(
+        'Lütfen satın almak istediğiniz paketi seçin',
+        ToastAndroid.SHORT,
+        ToastAndroid.CENTER,
+      );
+    }
+  };
   render() {
     const {show, handleClose} = this.props;
     return (
@@ -23,24 +45,33 @@ class Telefon extends Component {
         onSwipeComplete={handleClose}
         swipeDirection="left">
         <View style={styles.MViewStyle1}>
-          <View style={styles.absView}>
-            <Image source={Match} />
+          <View style={styles.TopView}>
+            <View style={styles.absView}>
+              <Image source={Match} style={styles.absViewImage} />
+            </View>
+            <View style={styles.MViewStyle2}>
+              <LinearGradient
+                start={{x: 0.0, y: 1.0}}
+                end={{x: 1.0, y: 1.0}}
+                locations={[0.1, 0.4, 0.9]}
+                colors={['#FF62A5', '#FA4076', '#F61F48']}
+                style={styles.GradientStyle2}
+              />
+              <ImageBackground style={styles.image} source={Gradback}>
+                <View style={styles.backImageinView1}>
+                  <View style={styles.backImageinView1inView1}>
+                    <Image source={phone} style={styles.phoneSyle} />
+                  </View>
+                  <View style={styles.backImageinView1inView2} />
+                </View>
+                <View style={styles.backImageinView2}>
+                  <Text style={styles.TextStyleHeader}>Super Paket</Text>
+                </View>
+              </ImageBackground>
+            </View>
+            <View style={styles.FreeView1} />
           </View>
-          <View style={styles.absView1}>
-            <Image source={phone} />
-          </View>
-          <View style={styles.MViewStyle2}>
-            <LinearGradient
-              start={{x: 0.0, y: 1.0}}
-              end={{x: 1.0, y: 1.0}}
-              locations={[0.1, 0.4, 0.9]}
-              colors={['#FF62A5', '#FA4076', '#F61F48']}
-              style={styles.GradientStyle2}
-            />
-            <ImageBackground style={styles.image} source={Gradback}>
-              <Text style={styles.TextStyleHeader}>Super Paket</Text>
-            </ImageBackground>
-          </View>
+
           <View style={styles.MViewStyle3}>
             <Text style={styles.TextStyle2}>
               Süper paket ile telefon numarasını anında görüntüle arama ve
@@ -49,9 +80,11 @@ class Telefon extends Component {
           </View>
           <View style={styles.MViewStyle4}>
             <Telefon1Packlet
-              price={'129,99'}
+              price={'99,99'}
               packageText={'Telefon Numarasini Aninda Gor'}
               packageName={'Super Paket'}
+              pressStatus={this.state.pressStatus}
+              onPress={this.onPressFullPackage}
             />
           </View>
           <View style={styles.MViewStyle5}>
@@ -62,18 +95,15 @@ class Telefon extends Component {
               <Veya />
             </View>
             <View style={styles.MViewStyle13}>
-              <BuyEftButton />
+              <BuyEftButton onPress={this.onPressBuyNow} />
             </View>
             <View style={styles.MViewStyle14}>
               <PaymentText />
             </View>
-            <View style={styles.MViewStyle13}>
-              <Text
-                style={{fontSize: 23, color: '#F61F48', textAlign: 'center'}}>
-                0555 555 55 55
-              </Text>
+            <View style={[styles.MViewStyle13]}>
+              <Text style={styles.PhoneTextStyle}>0552 350 9754</Text>
             </View>
-            <View style={{flex: 1}} />
+            <View style={styles.FreeStyle} />
           </View>
         </View>
       </Modal>

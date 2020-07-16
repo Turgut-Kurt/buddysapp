@@ -1,6 +1,5 @@
 import {StyleSheet} from 'react-native';
-import {calcHeight, calcWidth, calculate} from '../../../../Dimensions';
-
+import {calcWidth, calculate} from '../../../../Dimensions';
 const styles = StyleSheet.create({
   Container: {
     flex: 1,
@@ -11,28 +10,6 @@ const styles = StyleSheet.create({
     overflow: 'hidden',
   },
   TopView: {flex: 1.472},
-  TopCenterImageView: {
-    width: '100%',
-    height: '100%',
-    position: 'absolute',
-    flexDirection: 'row',
-  },
-  ImageViewFlex1: {flex: 1},
-  ImageViewFlex2: {
-    flex: 1.2,
-    justifyContent: 'flex-end',
-    paddingBottom: calculate(2),
-  },
-  ImageViewFlex2inView: {
-    aspectRatio: 1,
-    zIndex: 2,
-  },
-  ImageViewFlex2inViewImage: {
-    width: '100%',
-    height: '100%',
-    overflow: 'hidden',
-    borderRadius: calculate(20),
-  },
   absView: {
     width: '98%',
     zIndex: 3,
@@ -63,6 +40,11 @@ const styles = StyleSheet.create({
   },
 
   PacketView: {flex: 1},
+  extraPacketView: {
+    overflow: 'hidden',
+    marginHorizontal: calculate(1.3),
+    flexDirection: 'row',
+  },
   BottomView: {flex: 1.166},
   GradientStyle1: {
     flex: 1,

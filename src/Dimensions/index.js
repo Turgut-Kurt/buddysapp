@@ -5,3 +5,7 @@ export const calcHeight = (x: number) =>
   PixelRatio.roundToNearestPixel((deviceHeight * x) / 100);
 export const calcWidth = (x: number) =>
   PixelRatio.roundToNearestPixel((deviceWidth * x) / 100);
+
+export const calculate = (x: number) => {
+  return (calcWidth(x) + calcHeight(x)) / 2;
+};

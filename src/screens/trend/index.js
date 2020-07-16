@@ -15,6 +15,7 @@ import ProfileTab2 from '../component/profileTab2';
 import {connect} from 'react-redux';
 import {GetVip} from '../../store/Actions/Vip';
 import {GetShowcase} from '../../store/Actions/Showcase';
+import {GetShowuser} from '../../store/Actions/Showuser';
 import {GetGivesWantedAnswersUsers} from '../../store/Actions/GivesWantedAnswersUsers';
 import {GetFindUsers} from '../../store/Actions/FindUsers';
 import {GetLastOnlineUsers} from '../../store/Actions/LastOnlineUsers';
@@ -27,16 +28,29 @@ class Trend extends Component {
     super(props);
     this.state = {
       vip: null,
-      list: props.ShowcaseReducer.data,
+      list: [],
+      myid: null,
     };
   }
 
   componentDidMount = async () => {
     const {userId} = this.props.SignInReducer;
-    const {next: n0, data: d0} = this.props.ShowcaseReducer;
-    // this.setState({list: d0});
     await this.getCurrentUser(userId);
+
+    await this.props.GetShowuser();
+    const {data: d0} = this.props.ShowuserReducer;
+    d0.forEach(function (element) {
+      element.is_showcase = true;
+    });
     await this.props.GetShowcase();
+    const {data: d1} = this.props.ShowcaseReducer;
+    this.setState({list: [].concat(this.state.list, d0, d1)});
+    console.log('NEWlistNEWlistNEWlistNEWlistNEWlist');
+    console.log('NEWlistNEWlistNEWlistNEWlistNEWlist');
+    console.log(this.state.list);
+    console.log('NEWlistNEWlistNEWlistNEWlistNEWlist');
+    console.log('NEWlistNEWlistNEWlistNEWlistNEWlist');
+
     await this.props.GetGivesWantedAnswersUsers();
     let distance = await this.getDistance();
     await this.props.GetFindUsers(
@@ -49,7 +63,12 @@ class Trend extends Component {
   getCurrentUser = async (userId) => {
     try {
       const user = await axiosInstance.get(`api/users/${userId}/`);
-      this.setState({vip: user.data.is_vip});
+      Object.assign(user.data, {is_showcase: false});
+      this.setState({
+        vip: user.data.is_vip,
+        list: user.data,
+        myid: user.data.id,
+      });
     } catch (e) {
       console.log(e);
     }
@@ -72,15 +91,17 @@ class Trend extends Component {
               style={styles.flatStyle}
               keyExtractor={(item) => item.id.toString()}
               numColumns={2}
-              data={data}
+              data={this.state.list}
               onEndReached={this.getMoreUsers}
               onEndReachedThreshold={0.5}
+              onEndThreshold={0}
               renderItem={({item, index}) => (
                 <ProfileTab2
                   key={`${type}_${index}`}
                   {...item}
                   type={type}
                   vip={vip}
+                  myid={this.state.myid}
                 />
               )}
             />
@@ -96,14 +117,13 @@ class Trend extends Component {
   };
 
   getMoreUsers = async () => {
-    const {next: n0, data: d0} = this.props.ShowcaseReducer;
+    const {next: n0} = this.props.ShowcaseReducer;
     const splitUrl = n0.split('/');
     console.log('split', splitUrl);
     let url = splitUrl[3] + '/' + splitUrl[4] + '/' + splitUrl[5];
     console.log('URL', url);
     const user = await axiosInstance.get(url);
-    this.setState({list: [...d0, ...user.data.results]});
-    console.log('MORE', user);
+    this.setState({list: [].concat(this.state.list, user.data.results)});
   };
 
   render() {
@@ -133,7 +153,9 @@ class Trend extends Component {
       data: d4,
     } = this.props.LastOnlineUsersReducer;*/
     return (
-      <View>{this.renderItems(l0, e0, this.state.list, 'Showcase')}</View>
+      <View style={{width: '100%'}}>
+        {this.renderItems(l0, e0, this.state.list, 'Showcase')}
+      </View>
       // <ScrollView style={{width: '100%'}} showsVerticalScrollIndicator={false}>
 
       // </ScrollView>
@@ -146,6 +168,7 @@ const mapStateToProps = (state) => {
     SignInReducer: state.SignInReducer,
     VipReducer: state.VipReducer,
     ShowcaseReducer: state.ShowcaseReducer,
+    ShowuserReducer: state.ShowuserReducer,
     GivesWantedAnswersUsersReducer: state.GivesWantedAnswersUsersReducer,
     FindUsersReducer: state.FindUsersReducer,
     AnswerToSpecialQuestionReducer: state.AnswerToSpecialQuestionReducer,
@@ -160,6 +183,7 @@ const mapDispatchToProps = {
   GetAnswerToSpecialQuestion,
   //GetLastOnlineUsers,
   GetShowcase,
+  GetShowuser,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(Trend);

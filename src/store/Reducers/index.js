@@ -9,6 +9,7 @@ import ILiked from './ILiked';
 import Like from './Like';
 import Vip from './Vip';
 import Showcase from './Showcase';
+import Showuser from './Showuser';
 import AnswerToSpecialQuestion from './AnswerToSpecialQuestion';
 import Messages from './Messages';
 import CheckUserQuestions from './CheckUserQuestions';
@@ -25,6 +26,7 @@ export default combineReducers({
   LikeReducer: Like,
   VipReducer: Vip,
   ShowcaseReducer: Showcase,
+  ShowuserReducer: Showuser,
   AnswerToSpecialQuestionReducer: AnswerToSpecialQuestion,
   MessagesReducer: Messages,
   CheckUserQuestionsReducer: CheckUserQuestions,

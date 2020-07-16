@@ -1,23 +1,36 @@
 import React, {Component} from 'react';
-import {Text, View, StyleSheet} from 'react-native';
+import {Text, View, StyleSheet, TouchableOpacity} from 'react-native';
+import {calculate} from '../../../../../Dimensions';
 class Index extends Component {
   renderItem = () => {
-    const {price, mounthNumber, Pro} = this.props;
     return (
       <View style={styles.MViewStyle1}>
         <View style={styles.TextView}>
           <Text style={styles.TextStyle6}>Firsati kacirma</Text>
         </View>
+        <TouchableOpacity
+          style={styles.MViewStyle3}
+          onPress={this.props.onPress}>
+          <View style={styles.ViewStyleG}>
+            <View style={styles.MViewStyle4}>
+              <Text style={styles.TextStyle2}>Hepsi Burada Paket</Text>
+            </View>
+            <View style={styles.MViewStyle5}>
+              <Text adjustsFontSizeToFit={true} style={styles.TextStyle5}>
+                Sadece
+              </Text>
+            </View>
+          </View>
+        </TouchableOpacity>
         <View style={styles.MViewStyle2}>
-          <Text style={styles.TextStyle1}>499 TL</Text>
-        </View>
-        <View style={styles.MViewStyle3}>
-          <View style={styles.MViewStyle4}>
-            <Text style={styles.TextStyle2}>Hepsi Burada Paket</Text>
-          </View>
-          <View style={styles.MViewStyle5}>
-            <Text style={styles.TextStyle5}>Sadece</Text>
-          </View>
+          <Text
+            style={
+              this.props.pressStatus === false
+                ? styles.TextStyle1
+                : styles.TextStyle10
+            }>
+            399,99 TL
+          </Text>
         </View>
       </View>
     );
@@ -30,10 +43,47 @@ class Index extends Component {
 const styles = StyleSheet.create({
   MViewStyle1: {
     flex: 1,
-    paddingHorizontal: 30,
+    paddingHorizontal: calculate(5),
     justifyContent: 'flex-end',
     alignItems: 'center',
   },
+  TextView: {
+    flex: 11,
+    width: '100%',
+  },
+  TextStyle6: {
+    fontSize: calculate(5.7),
+    color: '#F6481F',
+    fontFamily: 'Montserrat-Bold',
+    textAlign: 'center',
+    lineHeight: calculate(6),
+  },
+
+  MViewStyle3: {flex: 25, width: '100%'},
+  ViewStyleG: {
+    height: '85%',
+    width: '100%',
+    borderRadius: calculate(2),
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 5,
+    },
+    shadowOpacity: 0.34,
+    shadowRadius: 6.27,
+    elevation: 10,
+    backgroundColor: 'white',
+  },
+  MViewStyle4: {flex: 1, alignItems: 'center', width: '100%'},
+  TextStyle2: {fontSize: calculate(3.1), textAlign: 'center', color: '#111111'},
+  MViewStyle5: {flex: 1.62, alignItems: 'center', justifyContent: 'center'},
+  TextStyle5: {
+    fontSize: calculate(5.7),
+    color: '#F61F48',
+    textAlign: 'center',
+    lineHeight: calculate(5.6),
+  },
+
   MViewStyle2: {
     position: 'absolute',
     justifyContent: 'center',
@@ -49,51 +99,24 @@ const styles = StyleSheet.create({
     elevation: 10,
   },
   TextStyle1: {
-    fontSize: 20,
+    fontSize: calculate(3.3),
+    fontWeight: 'bold',
+    alignSelf: 'center',
+    color: '#ffffff',
+    backgroundColor: '#000000',
+    textAlign: 'center',
+    paddingHorizontal: calculate(1.8),
+    borderRadius: 50,
+  },
+  TextStyle10: {
+    fontSize: calculate(3.3),
     fontWeight: 'bold',
     alignSelf: 'center',
     color: '#ffffff',
     backgroundColor: '#0A916D',
     textAlign: 'center',
-    paddingHorizontal: 20,
-    borderRadius: 15,
-  },
-  MViewStyle3: {
-    zIndex: 1,
-    width: '100%',
-    height: '60%',
-    marginBottom: 10,
-    borderRadius: 20,
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 5,
-    },
-    shadowOpacity: 0.34,
-    shadowRadius: 6.27,
-    elevation: 10,
-    backgroundColor: 'white',
-  },
-  TextView: {
-    width: '100%',
-    height: '35%',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  TextStyle6: {fontSize: 34, color: '#F6481F', fontWeight: 'bold'},
-  MViewStyle4: {flex: 1, alignItems: 'center', justifyContent: 'center'},
-  TextStyle2: {
-    fontSize: 18,
-    textAlign: 'center',
-    fontWeight: 'bold',
-    color: '#111111',
-  },
-  TextStyle4: {fontSize: 17, color: '#F61F48'},
-  MViewStyle5: {flex: 1.5},
-  TextStyle5: {
-    fontSize: 34,
-    color: '#F61F48',
-    textAlign: 'center',
+    paddingHorizontal: calculate(1.8),
+    borderRadius: 50,
   },
 });
 export default Index;

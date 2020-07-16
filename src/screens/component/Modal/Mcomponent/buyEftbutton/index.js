@@ -1,10 +1,11 @@
 import React, {Component} from 'react';
 import {TouchableOpacity, Text, StyleSheet} from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
+import {calculate} from '../../../../../Dimensions';
 class Index extends Component {
   render() {
     return (
-      <TouchableOpacity style={styles.Container} >
+      <TouchableOpacity onPress={this.props.onPress} style={styles.Container}>
         <LinearGradient
           start={{x: 0.0, y: 1.0}}
           end={{x: 1.0, y: 1.0}}
@@ -21,20 +22,19 @@ const styles = StyleSheet.create({
   Container: {
     justifyContent: 'center',
     alignItems: 'center',
-    marginHorizontal: 56,
-    marginVertical: 2,
-    borderRadius: 40,
     overflow: 'hidden',
   },
   GradientStyle1: {
-    width: '100%',
-    height: '100%',
     alignItems: 'center',
     justifyContent: 'center',
+    paddingHorizontal: calculate(3.4),
+    paddingVertical: calculate(1.2),
+    borderRadius: calculate(10),
   },
   TextStyle: {
     color: '#ffffff',
-    fontSize: 17,
+    fontSize: calculate(2.5),
+    fontFamily: 'Montserrat-SemiBold',
     textAlign: 'center',
   },
 });

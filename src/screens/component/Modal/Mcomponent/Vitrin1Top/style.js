@@ -7,10 +7,10 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-end',
   },
   backImageStyle: {height: '100%', width: '100%', flexDirection: 'row'},
-  ViewStyle1: {flex: 1, justifyContent: 'center'},
-  ViewStyle2: {flex: 1.2, flexDirection: 'row'},
-  ViewStyle4: {flex: 1},
-  ViewStyle5: {flex: 2.3, paddingTop: calculate(1.2)},
+  FreeLeftView: {flex: 0.5},
+  LeftImageView: {flex: 2.248, paddingTop: calculate(2)},
+  FreeRightView: {flex: 2.321},
+  RightImageView: {flex: 2.86, justifyContent: 'center'},
   ViewStyle3: {aspectRatio: 1},
   imageStyle1: {
     width: '100%',
@@ -18,6 +18,5 @@ const styles = StyleSheet.create({
     overflow: 'hidden',
     borderRadius: calculate(20),
   },
-
 });
 export default styles;

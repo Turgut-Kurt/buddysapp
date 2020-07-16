@@ -1,27 +1,34 @@
 import React, {Component} from 'react';
-import {Text, View, StyleSheet} from 'react-native';
+import {Text, View, StyleSheet, TouchableOpacity} from 'react-native';
+import {calculate} from '../../../../../Dimensions';
 class Index extends Component {
   renderItem = () => {
-    const {price, mounthNumber, Pro} = this.props;
+    const {price, mounthNumber} = this.props;
     return (
       <View
         style={
-          Pro
+          this.props.pressStatus === true
             ? [styles.MViewStyle1, {justifyContent: 'flex-start'}]
             : styles.MViewStyle1
         }>
         <View
-          style={Pro ? [styles.MViewStyle2, {top: '53%'}] : styles.MViewStyle2}>
+          style={
+            this.props.pressStatus === true
+              ? [styles.MViewStyle2, {top: '61%'}]
+              : styles.MViewStyle2
+          }>
           <Text
             style={
-              Pro
+              this.props.pressStatus === true
                 ? [styles.TextStyle1, {backgroundColor: '#0A916D'}]
                 : styles.TextStyle1
             }>
             {price}
           </Text>
         </View>
-        <View style={styles.MViewStyle3}>
+        <TouchableOpacity
+          style={styles.MViewStyle3}
+          onPress={this.props.onPress}>
           <View style={styles.MViewStyle4}>
             <Text style={styles.TextStyle2}>
               {mounthNumber}
@@ -34,7 +41,7 @@ class Index extends Component {
               {mounthNumber} AY
             </Text>
           </View>
-        </View>
+        </TouchableOpacity>
       </View>
     );
   };
@@ -46,7 +53,7 @@ class Index extends Component {
 const styles = StyleSheet.create({
   MViewStyle1: {
     flex: 1,
-    paddingHorizontal: 4,
+    paddingHorizontal: calculate(0.67),
     justifyContent: 'flex-end',
     alignItems: 'center',
   },
@@ -65,21 +72,21 @@ const styles = StyleSheet.create({
     elevation: 10,
   },
   TextStyle1: {
-    fontSize: 14,
-    fontWeight: 'bold',
+    fontSize: calculate(2.1),
+    fontFamily: 'Montserrat-Bold',
     alignSelf: 'center',
     color: '#ffffff',
     backgroundColor: 'black',
     textAlign: 'center',
-    padding: 3,
-    borderRadius: 15,
+    padding: calculate(0.5),
+    borderRadius: calculate(5),
   },
   MViewStyle3: {
     zIndex: 1,
     width: '100%',
-    height: '60%',
-    marginBottom: 10,
-    borderRadius: 20,
+    height: '70%',
+    marginBottom: calculate(1.7),
+    borderRadius: calculate(3.4),
     shadowColor: '#000',
     shadowOffset: {
       width: 0,
@@ -92,17 +99,18 @@ const styles = StyleSheet.create({
   },
   MViewStyle4: {flex: 1, alignItems: 'center', justifyContent: 'center'},
   TextStyle2: {
-    fontSize: 31,
+    fontSize: calculate(5.1),
+    fontFamily: 'Montserrat-Bold',
     textAlign: 'center',
-    fontWeight: 'bold',
   },
-  TextStyle4: {fontSize: 17, color: '#F61F48'},
-  MViewStyle5: {flex: 1.2},
+  TextStyle4: {fontSize: calculate(3.2), color: '#F61F48'},
+  MViewStyle5: {flex: 1.2, alignItems: 'center'},
   TextStyle5: {
-    fontSize: 15,
+    fontSize: calculate(2.4),
     color: '#626260',
+    fontFamily: 'Montserrat',
     textAlign: 'center',
-    marginVertical: 3,
+    marginVertical: calculate(0.5),
   },
 });
 export default Index;

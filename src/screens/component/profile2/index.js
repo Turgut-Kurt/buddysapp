@@ -16,7 +16,7 @@ import { ILiked } from '../../../store/Actions/ILiked';
 import { BlurView } from "@react-native-community/blur";
 
 class Profile extends React.Component {
-  goProfile = () => NavigationService.navigate('Profile', { items: this.props });
+  goProfile = () => NavigationService.navigate('Profilenew', { items: this.props });
   goShop = () => NavigationService.navigate('Shop');
   onLike = async id => {
     console.log(id);

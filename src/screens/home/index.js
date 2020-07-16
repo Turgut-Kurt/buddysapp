@@ -177,9 +177,9 @@ class Home extends React.Component {
             <View style={styles.topView}>
               <Image
                 style={{width: 30, height: 30}}
-                source={require('../../assets/images/premium.png')}
+                source={require('../../assets/images/home.png')}
               />
-              <Text style={styles.titleText}>Vitrin</Text>
+              <Text style={styles.titleText}>Keşfet</Text>
               <View style={styles.buttons}>
                 <TouchableOpacity
                   style={[styles.filterButton, {marginRight: 10}]}

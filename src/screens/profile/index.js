@@ -4,28 +4,19 @@ import {
   Text,
   Image,
   TouchableOpacity,
-  ScrollView,
-  Modal,
-  ToastAndroid,
   BackHandler,
   StyleSheet,
+  ToastAndroid,
+  Platform,
+  AlertIOS,
 } from 'react-native';
-import styles from './style';
-import {calcHeight, calcWidth} from '../../Dimensions';
-import {SliderBox} from 'react-native-image-slider-box';
+import {calculate, calcWidth} from '../../Dimensions';
 import {connect} from 'react-redux';
 import {Like} from '../../store/Actions/Like';
-import LikeIcon from '../../assets/images/like.png';
-import NotLikeIcon from '../../assets/images/notLike.png';
 import {axiosInstance} from '../../utils/Api';
 import {LikedMe} from '../../store/Actions/LikedMe';
 import {ILiked} from '../../store/Actions/ILiked';
-import RNRestart from 'react-native-restart';
-import ImagePicker from 'react-native-image-picker';
-import ImageResizer from 'react-native-image-resizer';
 const NoUserPhoto = require('../../assets/images/no-user.jpg');
-const RNFS = require('react-native-fs');
-import ImageZoom from 'react-native-image-pan-zoom';
 import user from '../../assets/images/user3.png';
 import settings from '../../assets/images/settings.png';
 import Tac from '../../assets/images/tac.png';
@@ -36,9 +27,12 @@ import Backtac from '../../assets/images/backtac.png';
 import Arrow from '../../assets/images/arrow.png';
 import LinearGradient from 'react-native-linear-gradient';
 import Magazin2 from '../component/Modal/Magazin2';
-import Magazin from '../component/Modal/Magazin';
-import Vitrin from '../component/Modal/Vitrin';
+import Magazin1 from '../component/Modal/Magazin1';
+import Vitrin1 from '../component/Modal/Vitrin1';
 class Profile extends React.Component {
+  _toastWithDurationHandler = () => {
+    ToastAndroid.show('Bu paket satın alınmış', ToastAndroid.SHORT);
+  };
   constructor(props) {
     super(props);
     this.state = {
@@ -52,29 +46,38 @@ class Profile extends React.Component {
       showMagazin2: false,
       showMagazin: false,
       showVitrin: false,
+      is_vip: false,
+      is_showcase: false,
+      is_pre: false,
     };
   }
   showVitrin = () => {
-    this.setState({showVitrin: true});
+    if (!this.state.is_showcase) {
+      this.setState({showVitrin: true});
+    } else {
+      ToastAndroid.show('Vitrin paketi satın alınmış', ToastAndroid.SHORT);
+    }
   };
-
   hideVitrin = () => {
     this.setState({showVitrin: false});
   };
   showMagazin2 = () => {
     this.setState({showMagazin2: true});
   };
-
   hideMagazin2 = () => {
     this.setState({showMagazin2: false});
   };
   showMagazin = () => {
-    this.setState({showMagazin: true});
+    if (!this.state.is_pre) {
+      this.setState({showMagazin: true});
+    } else {
+      ToastAndroid.show('Vitrin paketi satın alınmış', ToastAndroid.SHORT);
+    }
   };
-
   hideMagazin = () => {
     this.setState({showMagazin: false});
   };
+
   componentDidMount = async () => {
     const detail = this.props.navigation.getParam('items');
     if (detail) {
@@ -108,94 +111,21 @@ class Profile extends React.Component {
     if (userId) {
       try {
         const user = await axiosInstance.get(`api/users/${userId}/`);
+        console.log('*********************');
+        console.log(user);
+        console.log('*********************');
         this.setState({
           currentUser: user.data,
           currentUserLike: userId === user.data.id,
+          is_vip: user.data.is_vip,
+          is_showcase: user.data.is_showcase,
+          is_pre: user.data.is_pre,
         });
       } catch (e) {
         setTimeout(await this.getUserInfo(), 5000);
       }
     }
   }
-
-  renderImages = (detail) => {
-    let images = [];
-    if (detail.profile === undefined || detail.profile === null) return;
-    if (detail.profile === undefined || detail.profile === null) return;
-    if (
-      detail.photos !== undefined &&
-      detail.photos.length > 0 &&
-      detail.profile.photo
-    ) {
-      images = [detail.profile.photo, ...detail.photos.map((i) => i.photo)];
-    } else {
-      if (detail.profile.photo) {
-        images = [detail.profile.photo];
-      } else if (detail.photos.length > 0) {
-        images = [...detail.photos.map((i) => i.photo)];
-      } else {
-        images = [NoUserPhoto];
-      }
-    }
-    return (
-      <SliderBox
-        images={images}
-        sliderBoxHeight="100%"
-        dotColor="#FFEE58"
-        inactiveDotColor="#90A4AE"
-        onCurrentImagePressed={(index) =>
-          this.setState({modalVisible: true, modalPhoto: images[index]})
-        }
-        currentImageEmitter={(index) =>
-          this.setState({modalPhoto: images[index]})
-        }
-      />
-    );
-  };
-  async sendChat(detail) {
-    const {userId} = await this.props.SignInReducer;
-    const user = await axiosInstance.get(`api/users/${userId}/`);
-    console.log(detail);
-    console.log(user);
-    this.props.navigation.navigate('Chat', {
-      User: {
-        username: detail.username,
-        otherId: detail.id,
-      },
-    });
-  }
-  renderImagesIc = (detail) => {
-    let images = [];
-    if (detail.profile === undefined || detail.profile === null) return;
-    if (detail.profile === undefined || detail.profile === null) return;
-    if (
-      detail.photos !== undefined &&
-      detail.photos.length > 0 &&
-      detail.profile.photo
-    ) {
-      images = [detail.profile.photo, ...detail.photos.map((i) => i.photo)];
-    } else {
-      if (detail.profile.photo) {
-        images = [detail.profile.photo];
-      } else if (detail.photos.length > 0) {
-        images = [...detail.photos.map((i) => i.photo)];
-      } else {
-        images = [NoUserPhoto];
-      }
-    }
-    return (
-      <SliderBox
-        images={images}
-        sliderBoxHeight="90%"
-        dotColor="#FFEE58"
-        inactiveDotColor="#90A4AE"
-        currentImageEmitter={(index) =>
-          this.setState({modalPhoto: images[index]})
-        }
-      />
-    );
-  };
-
   onWhatFind = (type) => {
     switch (type) {
       case 'WM':
@@ -214,52 +144,6 @@ class Profile extends React.Component {
         return type;
     }
   };
-
-  onZodiac = (type) => {
-    switch (type) {
-      case 'KC':
-        return 'Koç';
-      case 'BG':
-        return 'Boğa';
-      case 'IK':
-        return 'İkizler';
-      case 'YN':
-        return 'Yengeç';
-      case 'AS':
-        return 'Aslan';
-      case 'BŞ':
-        return 'Başak';
-      case 'TR':
-        return 'Terazi';
-      case 'AK':
-        return 'Akrep';
-      case 'YY':
-        return 'Yay';
-      case 'OG':
-        return 'Oğlak';
-      case 'KV':
-        return 'Kova';
-      case 'BL':
-        return 'Balık';
-      default:
-        return type;
-    }
-  };
-
-  onLike = async (detail, like) => {
-    try {
-      console.log(!like);
-      const user = await axiosInstance.post('action/like/', {
-        user_id: detail.id,
-        state: !like,
-      });
-      this.setState({like: user.data.is_liked});
-      console.log(1);
-    } catch (e) {
-      console.log(e);
-    }
-  };
-
   likeFunc = async (id) => {
     try {
       console.log('URL =>', id);
@@ -270,98 +154,38 @@ class Profile extends React.Component {
       this.props.ILiked();
     } catch (e) {}
   };
-  formatDate(date) {
-    let year = date.split('-');
-    const now = new Date().getFullYear();
-    return now - year[0];
-  }
-  imageSelect = (type) => {
-    const options = {
-      title: 'Avatar Seç',
-      storageOptions: {
-        skipBackup: true,
-        path: 'images',
-      },
-    };
-    ImagePicker.launchImageLibrary(options, (response) => {
-      if (response.didCancel) {
-        console.log('User cancelled image picker');
-      } else if (response.error) {
-        console.log('ImagePicker Error: ', response.error);
-      } else {
-        if (response.uri !== '' && response.uri !== null) {
-          this.imageResize(response.uri, type);
-        }
-      }
-    });
-  };
 
-  deleteImage = (modalPhoto, detail) => {
-    axiosInstance.post('api/photos/pk', {
-      user_id: detail.id,
-      photo: modalPhoto,
-    });
-  };
-
-  imageResize = (uri, type) => {
-    ImageResizer.createResizedImage(uri, 1366, 768, 'JPEG', 80)
-      .then((resizedImage) => {
-        this.setState({
-          [type]: resizedImage.uri,
-        });
-        this.handleBase64(resizedImage.path, type);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  };
-
-  handleBase64 = async (path, type) => {
-    try {
-      const base64 = await RNFS.readFile(path, 'base64');
-      this.setState({photo: base64});
-    } catch (e) {
-      ToastAndroid.show(
-        'Resimi base64 e çevirirken bir problem oluştu.',
-        ToastAndroid.LONG,
-        ToastAndroid.CENTER,
-      );
-    }
-  };
-  nextQuestion = async (id, like) => {
-    this.props.navigation.push('AnswerQuestions', {
-      otherUserId: id,
-      currentUser: like,
-      nextQuestion: () => this.nextQuestion(id, like),
-    });
-  };
   renderItems = (detail) => {
     if (detail) {
       const {navigate} = this.props.navigation;
       const {token} = this.props.SignInReducer;
-      const {
-        like,
-        currentUserLike,
-        currentUser,
-        modalVisible,
-        modalPhoto,
-      } = this.state;
+      const {like, currentUserLike, currentUser, modalVisible} = this.state;
       let profile = detail.profile !== null ? detail.profile : {};
+      console.log('*********************');
+      console.log(this.state.is_vip);
+      console.log(this.state.is_showcase);
+      console.log(this.state.is_pre);
+      console.log('*********************');
       return (
         <View style={{flex: 1, width: '100%'}}>
-          <Magazin
+          <Magazin1
             show={this.state.showMagazin}
             handleClose={this.hideMagazin}
           />
-          <Vitrin show={this.state.showVitrin} handleClose={this.hideVitrin} />
+          <Vitrin1
+            source={{uri: profile.photo}}
+            show={this.state.showVitrin}
+            handleClose={this.hideVitrin}
+          />
           <Magazin2
             show={this.state.showMagazin2}
             handleClose={this.hideMagazin2}
+            source={{uri: profile.photo}}
           />
           <View style={styles1.HeaderContainer}>
             <View style={styles1.HeaderViewStyle1} />
             <View style={styles1.HeaderViewStyle2}>
-              <Image source={user} />
+              <Image source={user} style={styles1.profileImageStyle} />
               <Text style={styles1.HeaderTitleStyle}>Profil</Text>
             </View>
             <View style={styles1.HeaderViewStyle1}>
@@ -370,172 +194,205 @@ class Profile extends React.Component {
                 onPress={() => {
                   navigate('Settings');
                 }}>
-                <Image source={settings} />
+                <Image source={settings} style={styles1.settingsImageStyle} />
               </TouchableOpacity>
             </View>
           </View>
-          <View style={styles2.Container}>
-            <View style={styles2.ProfileView}>
-              <View style={styles2.ProfileViewStyle1}>
-                <View style={styles2.ProfileViewStyle3}>
-                  <View style={styles2.ProfileViewStyle6}>
-                    <View style={styles2.ProfileViewStyle7}>
-                      <Image
-                        source={
-                          profile && profile.photo
-                            ? {uri: profile.photo}
-                            : NoUserPhoto
-                        }
-                        style={styles2.profileImageStyle}
-                      />
-                    </View>
-                    <View style={styles2.ProfileViewStyle8}>
+          <View style={styles1.Content1}>
+            <View style={styles1.ProfileContainer}>
+              <View style={styles1.ProfileConTop}>
+                <View style={styles1.ProfileConTopLeft}>
+                  <View style={[styles1.ProfileImageView]}>
+                    <Image
+                      source={
+                        profile && profile.photo
+                          ? {uri: profile.photo}
+                          : NoUserPhoto
+                      }
+                      style={styles1.profileImageStyle1}
+                    />
+                    <View style={styles1.ProfileImageView1}>
                       <LinearGradient
                         start={{x: 0.0, y: 1.0}}
                         end={{x: 1.0, y: 1.0}}
                         locations={[0.1, 0.5, 0.9]}
                         colors={['#FF8960', '#FF8960', '#FF62A5']}
-                        style={styles2.GradientStyle2}>
+                        style={styles1.GradientStyle2}>
                         <Image
                           source={Tac}
-                          style={styles2.profileImageStyle2}
+                          style={styles1.profileImageStyle2}
                         />
                       </LinearGradient>
                     </View>
                   </View>
                 </View>
-                <View style={styles2.ProfileViewStyle4}>
-                  <View style={styles2.ProfileViewStyle9}>
-                    <Text style={styles2.ProfileTextStyle1}>
-                      {detail.first_name}
-                    </Text>
-                    <Text style={styles2.ProfileTextStyle2}>
-                      {profile && profile.city ? profile.city : 'sehiryok'}
-                    </Text>
-                  </View>
+
+                <View style={styles1.ProfileConTopCenter}>
+                  <Text style={styles1.ProfileNameText}>
+                    {detail.first_name}
+                  </Text>
+                  <Text style={styles1.ProfileCityText}>
+                    {profile && profile.city ? profile.city : 'sehiryok'}
+                  </Text>
                 </View>
-                <View style={styles2.ProfileViewStyle5}>
+                <View style={styles1.ProfileConTopRight}>
                   <TouchableOpacity
-                    style={styles2.ProfileTouchStyle}
+                    style={styles1.ProfileConTouchable}
                     onPress={() => navigate('InfoChange')}>
-                    <Image source={Duzelt} />
+                    <Image
+                      style={styles1.ProfileConTouchableImage}
+                      source={Duzelt}
+                    />
                   </TouchableOpacity>
                 </View>
               </View>
-              <View style={styles2.ProfileViewStyle2}>
-                <View style={styles2.ProfileViewStyle10}>
-                  <Text style={styles2.ProfileTextStyle3}>BEGENME</Text>
-                  <Text style={styles2.ProfileTextStyle4}>2318</Text>
+
+              <View style={{flex: 0.2}} />
+              <View style={styles1.ProfileConBottom}>
+                <View style={styles1.ProfileConBottomFlex}>
+                  <Text style={styles1.ProfileConBottomFlexText1}>BEGENME</Text>
+                  <Text style={styles1.ProfileConBottomFlexText2}>2318</Text>
                 </View>
-                <View style={styles2.ProfileViewStyle10}>
-                  <Text style={styles2.ProfileTextStyle3}>MESAJ</Text>
-                  <Text style={styles2.ProfileTextStyle4}>364</Text>
+                <View style={styles1.ProfileConBottomFlex}>
+                  <Text style={styles1.ProfileConBottomFlexText1}>MESAJ</Text>
+                  <Text style={styles1.ProfileConBottomFlexText2}>364</Text>
                 </View>
-                <View style={styles2.ProfileViewStyle10}>
-                  <Text style={styles2.ProfileTextStyle3}>ESLESME</Text>
-                  <Text style={styles2.ProfileTextStyle4}>15</Text>
+                <View style={styles1.ProfileConBottomFlex}>
+                  <Text style={styles1.ProfileConBottomFlexText1}>ESLESME</Text>
+                  <Text style={styles1.ProfileConBottomFlexText2}>15</Text>
                 </View>
               </View>
             </View>
 
-            <View style={styles2.Top}>
+            <View style={styles1.Content2}>
               <LinearGradient
                 start={{x: 0.0, y: 1.0}}
                 end={{x: 1.0, y: 1.0}}
                 locations={[0.1, 0.4, 0.9]}
                 colors={['#FF62A5', '#FA4076', '#F61F48']}
-                style={styles2.GradientStyle1}
+                style={styles1.GradientStyle1}
               />
             </View>
-
-            <View style={styles2.Content}>
-              <View style={styles2.ContentViewStyle1} />
-              <View style={styles2.ContentViewStyle1}>
-                <Text style={styles2.ContentTextStyle1}>Hakkında </Text>
-                <Text style={styles2.ContentTextStyle2}>
-                  {profile && profile.about_me ? profile.about_me : 'yok'}
-                </Text>
-              </View>
-              <View style={styles2.ContentViewStyle2}>
-                <View style={styles2.ContentViewStyle3}>
-                  <View style={styles2.ContentViewStyle4}>
-                    <Text style={styles2.ContentTextStyle1}>Aradığı</Text>
-                    <Text style={styles2.ContentTextStyle2}>
-                      {profile.what_find
-                        ? this.onWhatFind(profile.what_find)
-                        : '...'}
-                    </Text>
-                  </View>
-                  <View style={styles2.ContentViewStyle4} />
-                  <View style={styles2.ContentViewStyle4}>
-                    <Text style={styles2.ContentTextStyle1}>Hobi</Text>
-                    <Text style={styles2.ContentTextStyle2}>
-                      {profile && profile.hobbies ? profile.hobbies : 'hobiyok'}
-                    </Text>
-                  </View>
+            <View style={styles1.FreeContent} />
+          </View>
+          <View style={styles1.Content3}>
+            <View style={styles1.Content3inView1}>
+              <Text style={styles1.Content3inView1Text1}>Hakkında </Text>
+              <Text style={styles1.Content3inView1Text2}>
+                {profile && profile.about_me ? profile.about_me : 'yok'}
+              </Text>
+            </View>
+            <View style={styles1.Content3inView2}>
+              <View style={styles1.Content3inView2inView1}>
+                <View style={styles1.Content3inView2inView1inView}>
+                  <Text style={styles1.Content3inView1Text1}>Aradığı</Text>
+                  <Text style={styles1.Content3inView1Text2}>
+                    {profile.what_find
+                      ? this.onWhatFind(profile.what_find)
+                      : '...'}
+                  </Text>
                 </View>
-                <View style={styles2.ContentViewStyle3}>
-                  <View style={styles2.ContentViewStyle4}>
-                    <Text style={styles2.ContentTextStyle1}>Telefon</Text>
-                    <Text style={styles2.ContentTextStyle2}>
-                      {profile && profile.phone ? profile.phone : 'telyok'}
-                    </Text>
-                  </View>
-                  <View style={styles2.ContentViewStyle4} />
-                  <View style={styles2.ContentViewStyle4}>
-                    <Text style={styles2.ContentTextStyle1}>İnstagram</Text>
-                    <Text style={styles2.ContentTextStyle2}>@*******</Text>
-                  </View>
+                <View style={styles1.Content3inView2inView1inView} />
+                <View style={styles1.Content3inView2inView1inView}>
+                  <Text style={styles1.Content3inView1Text1}>Hobi</Text>
+                  <Text style={styles1.Content3inView1Text2}>
+                    {profile && profile.hobbies ? profile.hobbies : 'hobiyok'}
+                  </Text>
+                </View>
+              </View>
+
+              <View style={styles1.Content3inView2inView1}>
+                <View style={styles1.Content3inView2inView1inView}>
+                  <Text style={styles1.Content3inView1Text1}>Telefon</Text>
+                  <Text style={styles1.Content3inView1Text2}>
+                    {profile && profile.phone ? profile.phone : 'telyok'}
+                  </Text>
+                </View>
+                <View style={styles1.Content3inView2inView1inView} />
+                <View style={styles1.Content3inView2inView1inView}>
+                  <Text style={styles1.Content3inView1Text1}>İnstagram</Text>
+                  <Text style={styles1.Content3inView1Text2}>@*******</Text>
                 </View>
               </View>
             </View>
-
-            <View style={styles2.Bottom}>
-              <View style={styles2.BottomViewStyle1}>
-                <TouchableOpacity
-                  style={styles2.BottomViewStyle2}
-                  onPress={this.showMagazin2}>
-                  <View style={styles2.BottomViewStyle3}>
-                    <Image source={Star} style={styles2.BottomImageStyle1} />
-                  </View>
-                  <View style={styles2.BottomViewStyle4}>
-                    <Text style={styles2.BottomTextStyle1}>
-                      Hepsi Burada Paketi
-                    </Text>
-                  </View>
-                  <View style={styles2.BottomViewStyle5}>
-                    <Image source={Arrow} style={styles2.BottomImageStyle2} />
-                  </View>
-                </TouchableOpacity>
-                <TouchableOpacity style={styles2.BottomViewStyle2} onPress={this.showVitrin}>
-                  <View style={styles2.BottomViewStyle3}>
-                    <Image source={Heart} style={styles2.BottomImageStyle1} />
-                  </View>
-                  <View style={styles2.BottomViewStyle4}>
-                    <Text style={styles2.BottomTextStyle1}>
-                      Vitrin Paketleri
-                    </Text>
-                  </View>
-                  <View style={styles2.BottomViewStyle5}>
-                    <Image source={Arrow} style={styles2.BottomImageStyle2} />
-                  </View>
-                </TouchableOpacity>
-                <TouchableOpacity
-                  style={styles2.BottomViewStyle2}
-                  onPress={this.showMagazin}>
-                  <View style={styles2.BottomViewStyle3}>
-                    <Image source={Backtac} style={styles2.BottomImageStyle1} />
-                  </View>
-                  <View style={styles2.BottomViewStyle4}>
-                    <Text style={styles2.BottomTextStyle1}>
-                      Premium Paketler
-                    </Text>
-                  </View>
-                  <View style={styles2.BottomViewStyle5}>
-                    <Image source={Arrow} style={styles2.BottomImageStyle2} />
-                  </View>
-                </TouchableOpacity>
-              </View>
+          </View>
+          <View style={styles1.Content4}>
+            <View style={styles1.Content4inView}>
+              <TouchableOpacity
+                style={styles1.Content4inViewinFlexTouch}
+                onPress={
+                  this.state.is_vip === false
+                    ? this.showMagazin2
+                    : this._toastWithDurationHandler
+                }>
+                <View style={styles1.Content4inViewinFlexTouchinView1}>
+                  <Image
+                    source={Star}
+                    style={styles1.Content4inViewinFlexTouchinView1inImage}
+                  />
+                </View>
+                <View style={styles1.Content4inViewinFlexTouchinView2}>
+                  <Text style={styles1.Content4inViewinFlexTouchinView2inText}>
+                    Hepsi Burada Paketi
+                  </Text>
+                </View>
+                <View style={styles1.Content4inViewinFlexTouchinView1}>
+                  <Image
+                    source={Arrow}
+                    style={styles1.Content4inViewinFlexTouchinView1Image}
+                  />
+                </View>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={styles1.Content4inViewinFlexTouch}
+                onPress={
+                  this.state.is_vip === false
+                    ? this.showVitrin
+                    : this._toastWithDurationHandler
+                }>
+                <View style={styles1.Content4inViewinFlexTouchinView1}>
+                  <Image
+                    source={Heart}
+                    style={styles1.Content4inViewinFlexTouchinView1inImage}
+                  />
+                </View>
+                <View style={styles1.Content4inViewinFlexTouchinView2}>
+                  <Text style={styles1.Content4inViewinFlexTouchinView2inText}>
+                    Vitrin Paketleri
+                  </Text>
+                </View>
+                <View style={styles1.Content4inViewinFlexTouchinView1}>
+                  <Image
+                    source={Arrow}
+                    style={styles1.Content4inViewinFlexTouchinView1Image}
+                  />
+                </View>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={styles1.Content4inViewinFlexTouch}
+                onPress={
+                  this.state.is_vip === false
+                    ? this.showMagazin
+                    : this._toastWithDurationHandler
+                }>
+                <View style={styles1.Content4inViewinFlexTouchinView1}>
+                  <Image
+                    source={Backtac}
+                    style={styles1.Content4inViewinFlexTouchinView1inImage}
+                  />
+                </View>
+                <View style={styles1.Content4inViewinFlexTouchinView2}>
+                  <Text style={styles1.Content4inViewinFlexTouchinView2inText}>
+                    Premium Paketler
+                  </Text>
+                </View>
+                <View style={styles1.Content4inViewinFlexTouchinView1}>
+                  <Image
+                    source={Arrow}
+                    style={styles1.Content4inViewinFlexTouchinView1Image}
+                  />
+                </View>
+              </TouchableOpacity>
             </View>
           </View>
         </View>
@@ -544,7 +401,6 @@ class Profile extends React.Component {
       return <View />;
     }
   };
-
   render() {
     let detail = this.props.navigation.getParam('items');
     const {currentUser} = this.state;
@@ -553,10 +409,8 @@ class Profile extends React.Component {
 }
 const styles1 = StyleSheet.create({
   HeaderContainer: {
-    height: 70,
+    flex: 14,
     backgroundColor: '#F3F3FB',
-    justifyContent: 'center',
-    alignItems: 'center',
     flexDirection: 'row',
   },
   HeaderViewStyle1: {
@@ -565,122 +419,64 @@ const styles1 = StyleSheet.create({
     alignItems: 'flex-end',
     justifyContent: 'center',
   },
-  HeaderButtonStyle: {paddingVertical: 5, paddingHorizontal: 10},
   HeaderViewStyle2: {
     flex: 2,
-    height: '100%',
     alignItems: 'center',
     justifyContent: 'center',
     flexDirection: 'row',
+  },
+  profileImageStyle: {
+    width: calculate(4.3),
+    height: calculate(4.3),
   },
   HeaderTitleStyle: {
     color: '#424649',
     textAlign: 'center',
-    fontWeight: 'bold',
-    fontSize: 35,
-    marginHorizontal: 10,
+    fontFamily: 'FiraSans-Bold',
+    fontSize: calculate(6),
+    marginLeft: calculate(1.5948963317384),
   },
-});
-const styles2 = StyleSheet.create({
-  Container: {
-    flex: 1,
-    marginBottom: 80,
-    alignItems: 'center',
+  settingsImageStyle: {
+    width: calculate(6.74536256323777),
+    height: calculate(6.74536256323777),
   },
-  ProfileView: {
+  HeaderButtonStyle: {
+    paddingVertical: calculate(0.79744816586922),
+    paddingHorizontal: calculate(1.59489633173844),
+  },
+  Content1: {flex: 46, width: '100%', alignItems: 'center'},
+  ProfileContainer: {
     position: 'absolute',
-    width: calcWidth(92),
-    height: calcHeight(25),
+    width: calcWidth(100) - calculate(5.5),
+    height: '91%',
     zIndex: 3,
     shadowColor: '#000',
     shadowOffset: {
       width: 0,
-      height: 5,
+      height: 10,
     },
-    shadowOpacity: 0.34,
-    shadowRadius: 6.27,
-    elevation: 10,
+    shadowOpacity: 0.51,
+    shadowRadius: 13.16,
+    elevation: 20,
     backgroundColor: '#ffffff',
-    marginTop: 10,
-    borderRadius: 10,
+    marginTop: calculate(0.79744816586922),
+    borderRadius: calculate(1.59489633173844),
   },
-  ProfileViewStyle1: {
-    flex: 2,
+  ProfileConTop: {
+    flex: 1.9,
     overflow: 'hidden',
     flexDirection: 'row',
   },
-  ProfileViewStyle3: {
+  ProfileConTopLeft: {
     flex: 6,
     overflow: 'hidden',
     flexDirection: 'row',
+    paddingLeft: calculate(0.79744816586922),
   },
-  ProfileViewStyle4: {
-    flex: 9,
+  ProfileImageView: {
     overflow: 'hidden',
-    flexDirection: 'row',
-  },
-  ProfileViewStyle9: {
-    height: '91%',
-    width: '100%',
-    overflow: 'hidden',
-    justifyContent: 'center',
-  },
-  ProfileTextStyle1: {
-    color: '#4A4A4A',
-    fontSize: 24,
-    fontWeight: 'bold',
-    marginVertical: 10,
-    marginLeft: 20,
-  },
-  ProfileTextStyle2: {color: '#C1C0C9', fontSize: 15, marginLeft: 20},
-  ProfileViewStyle5: {
-    flex: 2,
-    overflow: 'hidden',
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  ProfileTouchStyle: {padding: 10},
-  ProfileViewStyle6: {
-    height: '91%',
-    width: '100%',
-    overflow: 'hidden',
-  },
-  ProfileViewStyle7: {
-    top: 10,
-    left: 5,
-    position: 'absolute',
-    height: calcWidth(26),
-    width: calcWidth(26),
-    borderRadius: calcWidth(26),
-    overflow: 'hidden',
-  },
-  profileImageStyle: {
-    width: '100%',
-    height: '100%',
-    overflow: 'hidden',
-    borderRadius: calcWidth(25),
-  },
-  profileImageStyle2: {
-    width: calcWidth(4),
-    height: calcWidth(4),
-    resizeMode: 'contain',
-  },
-  ProfileViewStyle8: {
-    bottom: 20,
-    right: 20,
-    position: 'absolute',
-    height: calcWidth(8),
-    width: calcWidth(8),
-    borderRadius: calcWidth(8),
-    overflow: 'hidden',
-    borderWidth: 3,
-    borderColor: 'white',
-  },
-  GradientStyle2: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
+    marginTop: calculate(1.59489633173844),
+    aspectRatio: 1,
   },
   profileImageStyle1: {
     width: '100%',
@@ -688,50 +484,118 @@ const styles2 = StyleSheet.create({
     overflow: 'hidden',
     borderRadius: calcWidth(25),
   },
-  ProfileViewStyle2: {
-    flex: 1,
+  ProfileImageView1: {
+    bottom: 2,
+    right: 0,
+    position: 'absolute',
+    height: calculate(4.384),
+    width: calculate(4.384),
+    borderRadius: calcWidth(8),
     overflow: 'hidden',
-    flexDirection: 'row',
+    borderWidth: calculate(0.51),
+    borderColor: 'white',
+    zIndex: 3,
   },
-  ProfileViewStyle10: {
+  profileImageStyle2: {
+    width: calculate(2.2),
+    height: calculate(2.2),
+    resizeMode: 'contain',
+  },
+  GradientStyle2: {
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
   },
-  ProfileTextStyle3: {fontSize: 13, color: '#C2C4CA'},
-  ProfileTextStyle4: {fontSize: 21, color: '#262628'},
-  Top: {flex: 1, width: '100%', zIndex: 0},
+  ProfileConTopCenter: {
+    flex: 9,
+    overflow: 'hidden',
+    justifyContent: 'center',
+  },
+  ProfileNameText: {
+    color: '#4A4A4A',
+    fontSize: calculate(4),
+    fontFamily: 'Montserrat-Bold',
+    marginVertical: calculate(1.59489633173844),
+  },
+  ProfileCityText: {
+    fontFamily: 'Montserrat-Regular',
+    color: '#C1C0C9',
+    fontSize: calculate(2.5),
+  },
+  ProfileConTopRight: {
+    flex: 2,
+    overflow: 'hidden',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  ProfileConTouchable: {
+    width: '100%',
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingVertical: calculate(1),
+  },
+  ProfileConTouchableImage: {
+    height: calculate(4),
+    width: calculate(4),
+  },
+  ProfileConBottom: {
+    flex: 1,
+    overflow: 'hidden',
+    flexDirection: 'row',
+    borderTopWidth: 0.5,
+    borderColor: '#D8D8D8',
+  },
+  ProfileConBottomFlex: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  ProfileConBottomFlexText1: {
+    fontFamily: 'Montserrat-Regular',
+    fontSize: calculate(2.2),
+    color: '#C2C4CA',
+  },
+  ProfileConBottomFlexText2: {
+    fontFamily: 'Montserrat-SemiBold',
+    fontSize: calculate(3.7),
+    color: '#262628',
+  },
+  Content2: {flex: 32, width: '100%', zIndex: 0},
   GradientStyle1: {
     flex: 1,
     width: '100%',
   },
-  Content: {flex: 2, width: '100%'},
-  ContentViewStyle1: {
+  FreeContent: {flex: 14, width: '100%'},
+  Content3: {flex: 48, width: '100%'},
+  Content3inView1: {
     flex: 0.5,
-    paddingHorizontal: 35,
+    paddingHorizontal: calculate(5.5),
   },
-  ContentViewStyle2: {
+  Content3inView1Text1: {
+    fontSize: calculate(3.2),
+    color: '#7755CD',
+    fontFamily: 'Montserrat-SemiBold',
+  },
+  Content3inView1Text2: {fontSize: calculate(2.5), color: '#B8B8B8'},
+  Content3inView2: {
     flex: 1,
-    paddingHorizontal: 35,
+    paddingHorizontal: calculate(5.5),
   },
-  ContentViewStyle3: {
+  Content3inView2inView1: {
     flex: 1,
     flexDirection: 'row',
   },
-  ContentViewStyle4: {
+  Content3inView2inView1inView: {
     flex: 1,
   },
-  ContentTextStyle1: {fontSize: 19, color: '#7755CD', fontWeight: 'bold'},
-  ContentTextStyle2: {fontSize: 15, color: '#B8B8B8'},
-  Bottom: {
-    flex: 1,
+  Content4: {
+    flex: 40,
     width: '100%',
     alignItems: 'center',
-    justifyContent: 'center',
   },
-  BottomViewStyle1: {
-    height: '90%',
-    width: '94%',
+  Content4inView: {
+    height: '75%',
+    width: calcWidth(100) - calculate(5.73355817871),
     shadowColor: '#000',
     shadowOffset: {
       width: 0,
@@ -741,38 +605,35 @@ const styles2 = StyleSheet.create({
     shadowRadius: 6.27,
     elevation: 10,
     backgroundColor: '#ffffff',
-    marginTop: 10,
     borderRadius: 10,
   },
-  BottomViewStyle2: {
+  Content4inViewinFlexTouch: {
     flex: 1,
     flexDirection: 'row',
-    borderBottomWidth: 0.5,
+    borderBottomWidth: calculate(0.1),
     borderColor: '#D8D8D8',
   },
-  BottomViewStyle3: {
+  Content4inViewinFlexTouchinView1: {
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
   },
-  BottomViewStyle4: {
+  Content4inViewinFlexTouchinView1inImage: {
+    width: calculate(6),
+    height: calculate(6),
+    resizeMode: 'contain',
+  },
+  Content4inViewinFlexTouchinView2: {
     flex: 3,
     justifyContent: 'center',
   },
-  BottomViewStyle5: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
+  Content4inViewinFlexTouchinView2inText: {
+    fontSize: calculate(3.6),
+    color: '#262628',
   },
-  BottomImageStyle1: {
-    width: calcWidth(9),
-    height: calcWidth(9),
-    resizeMode: 'contain',
-  },
-  BottomTextStyle1: {fontSize: 20, color: '#262628'},
-  BottomImageStyle2: {
-    width: calcWidth(5),
-    height: calcWidth(5),
+  Content4inViewinFlexTouchinView1Image: {
+    width: calculate(3),
+    height: calculate(3),
     resizeMode: 'contain',
   },
 });
@@ -782,7 +643,6 @@ const mapStateToProps = (state) => {
     LikeReducer: state.LikeReducer,
   };
 };
-
 const mapDispatchToProps = {
   Like,
   LikedMe,

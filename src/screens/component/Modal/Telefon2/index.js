@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {Text, View, Image, ImageBackground} from 'react-native';
+import {Text, View, Image, ImageBackground, ToastAndroid} from 'react-native';
 import Modal from 'react-native-modal';
 import styles from './style';
 import BuyButton from '../../Modal/Mcomponent/buyNowbutton';
@@ -10,8 +10,32 @@ import Telefon1Packlet from '../../Modal/Mcomponent/Telefon1Packlet';
 import LinearGradient from 'react-native-linear-gradient';
 import Gradback from '../../../../assets/images/gradback.png';
 import Match from '../../../../assets/images/match.png';
-import phone from '../../../../assets/images/phone.png';
-class Telefon extends Component {
+import insta from '../../../../assets/images/insta.png';
+import NavigationService from '../../../../services/NavigationService';
+class Telefon2 extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      pressStatus: false,
+    };
+  }
+  onPressFullPackage = () => {
+    this.setState({pressStatus: !this.state.pressStatus});
+  };
+  goShop() {
+    this.props.handleClose?.();
+    NavigationService.navigate('Shop');
+  }
+  onPressBuyNow = () => {
+    if (this.state.pressStatus === true) {
+      this.goShop();
+    } else {
+      ToastAndroid.show(
+        'Lütfen satın almak istediğiniz paketi seçin',
+        ToastAndroid.SHORT,
+      );
+    }
+  };
   render() {
     const {show, handleClose} = this.props;
     return (
@@ -35,12 +59,12 @@ class Telefon extends Component {
               <ImageBackground style={styles.image} source={Gradback}>
                 <View style={styles.backImageinView1}>
                   <View style={styles.backImageinView1inView1}>
-                    <Image source={phone} style={styles.phoneSyle} />
+                    <Image source={insta} style={styles.phoneSyle} />
                   </View>
                   <View style={styles.backImageinView1inView2} />
                 </View>
                 <View style={styles.backImageinView2}>
-                  <Text style={styles.TextStyleHeader}>Super Paket</Text>
+                  <Text style={styles.TextStyleHeader}>Sosyal Paket</Text>
                 </View>
               </ImageBackground>
             </View>
@@ -49,15 +73,17 @@ class Telefon extends Component {
 
           <View style={styles.MViewStyle3}>
             <Text style={styles.TextStyle2}>
-              Süper paket ile telefon numarasını anında görüntüle arama ve
-              yakından tanışma şansı yakala !
+              Sosyal Paket ile instagram adresini anında gör takip et ve
+              iletişime geç!
             </Text>
           </View>
           <View style={styles.MViewStyle4}>
             <Telefon1Packlet
-              price={'129,99'}
-              packageText={'Telefon Numarasini Aninda Gor'}
-              packageName={'Super Paket'}
+              price={'74,99'}
+              packageText={'instagram adresini anında gör!'}
+              packageName={'Sosyal Paket'}
+              pressStatus={this.state.pressStatus}
+              onPress={this.onPressFullPackage}
             />
           </View>
           <View style={styles.MViewStyle5}>
@@ -68,13 +94,13 @@ class Telefon extends Component {
               <Veya />
             </View>
             <View style={styles.MViewStyle13}>
-              <BuyEftButton />
+              <BuyEftButton onPress={this.onPressBuyNow} />
             </View>
             <View style={styles.MViewStyle14}>
               <PaymentText />
             </View>
             <View style={[styles.MViewStyle13]}>
-              <Text style={styles.PhoneTextStyle}>0555 555 55 55</Text>
+              <Text style={styles.PhoneTextStyle}>0552 350 9754</Text>
             </View>
             <View style={styles.FreeStyle} />
           </View>
@@ -83,4 +109,4 @@ class Telefon extends Component {
     );
   }
 }
-export default Telefon;
+export default Telefon2;
