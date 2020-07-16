@@ -1,16 +1,69 @@
 import {StyleSheet} from 'react-native';
-import {calcHeight, calcWidth} from '../../../../Dimensions';
+import {calcHeight, calcWidth, calculate} from '../../../../Dimensions';
 
 const styles = StyleSheet.create({
-  MViewStyle1: {
+  Container: {
     flex: 1,
-    marginHorizontal: calcWidth(9.6),
-    marginVertical: calcHeight(4.7),
+    marginHorizontal: calculate(5.3),
+    marginVertical: calculate(6.4),
     backgroundColor: '#ffffff',
     borderRadius: 12,
     overflow: 'hidden',
   },
+  TopView: {flex: 1.472},
+  TopCenterImageView: {
+    width: '100%',
+    height: '100%',
+    position: 'absolute',
+    flexDirection: 'row',
+  },
+  ImageViewFlex1: {flex: 1},
+  ImageViewFlex2: {
+    flex: 1.2,
+    justifyContent: 'flex-end',
+    paddingBottom: calculate(2),
+  },
+  ImageViewFlex2inView: {
+    aspectRatio: 1,
+    zIndex: 2,
+  },
+  ImageViewFlex2inViewImage: {
+    width: '100%',
+    height: '100%',
+    overflow: 'hidden',
+    borderRadius: calculate(20),
+  },
+  absView: {
+    width: '98%',
+    zIndex: 3,
+    position: 'absolute',
+    height: calculate(11),
+    overflow: 'visible',
+    alignSelf: 'center',
+    bottom: 0,
+  },
+  absViewImage: {
+    width: '100%',
+    height: '100%',
+    overflow: 'visible',
+  },
   MViewStyle2: {flex: 1, overflow: 'hidden'},
+  FreeView: {flex: 0.2},
+
+  CenterTextView: {
+    flex: 1.111,
+    overflow: 'hidden',
+    paddingHorizontal: calculate(3.5),
+    alignItems: 'center',
+  },
+  TextStyle2: {
+    fontSize: calculate(2.6),
+    textAlign: 'center',
+    fontFamily: 'Montserrat-Regular',
+  },
+
+  PacketView: {flex: 1},
+  BottomView: {flex: 1.166},
   GradientStyle1: {
     flex: 1,
   },
@@ -36,17 +89,9 @@ const styles = StyleSheet.create({
     height: calcWidth(12),
     resizeMode: 'contain',
   },
-  MViewStyle3: {
-    flex: 1,
-    overflow: 'hidden',
-    justifyContent: 'center',
-    alignItems: 'center',
-    paddingHorizontal: 20,
-  },
-  TextStyle2: {fontSize: 18, textAlign: 'center'},
 
   MViewStyle4: {
-    flex: 1.2,
+    flex: 1.47,
     overflow: 'hidden',
     marginHorizontal: 8,
     flexDirection: 'row',
@@ -120,14 +165,6 @@ const styles = StyleSheet.create({
   },
   MViewStyle14: {
     flex: 0.5,
-  },
-  absView: {
-    width: '100%',
-    justifyContent: 'center',
-    zIndex: 2,
-    alignItems: 'center',
-    position: 'absolute',
-    height: '44%',
   },
 });
 export default styles;
