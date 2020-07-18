@@ -28,6 +28,17 @@ class ShopContainer extends React.Component<Props, State> {
       skuItems: [],
     };
   }
+  componentDidMount = async () => {
+    try {
+      this.shopFunction();
+    } catch (err) {
+      ToastAndroid.show(
+        'Mağazaya bağlanırken bir hata oluştu.',
+        ToastAndroid.CENTER,
+        ToastAndroid.LONG,
+      );
+    }
+  };
 
   async shopFunction() {
     try {
@@ -41,15 +52,22 @@ class ShopContainer extends React.Component<Props, State> {
     }
   }
 
-  componentDidMount = async () => {
-    try {
-      this.shopFunction();
-    } catch (err) {
-      ToastAndroid.show(
-        'Mağazaya bağlanırken bir hata oluştu.',
-        ToastAndroid.CENTER,
-        ToastAndroid.LONG,
-      );
+  getPackets = async () => {
+    this.setState({ loading: true });
+    if (true) {
+      const getPackets = await axiosInstance.get('https://www.onappserver.com/packets/packets/');
+      const packets = getPackets.data.results;
+      console.log(packets)
+      this.setState({
+        packets,
+        loading: false,
+        skuItems: [
+          ...packets.filter(x => x.product_id !== null).map(p => p.product_id),
+        ],
+      });
+    } else {
+      //console.log(e);
+      this.setState({ loading: false });
     }
   };
 
@@ -67,6 +85,8 @@ class ShopContainer extends React.Component<Props, State> {
       console.log(e);
     }
   };
+
+
 
   onStoreBuyProduct = async () => {
     try {
@@ -107,24 +127,6 @@ class ShopContainer extends React.Component<Props, State> {
     }
   };
 
-  getPackets = async () => {
-    this.setState({ loading: true });
-    if (true) {
-      const getPackets = await axiosInstance.get('https://www.onappserver.com/packets/packets/');
-      const packets = getPackets.data.results;
-      console.log(packets)
-      this.setState({
-        packets,
-        loading: false,
-        skuItems: [
-          ...packets.filter(x => x.product_id !== null).map(p => p.product_id),
-        ],
-      });
-    } else {
-      //console.log(e);
-      this.setState({ loading: false });
-    }
-  };
 
   selectUrun = async urun => {
     await this.setState({

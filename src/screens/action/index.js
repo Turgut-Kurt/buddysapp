@@ -168,7 +168,7 @@ class Action extends React.Component {
                         onPress={() => {
                           console.log(card)
                           console.log('card')
-                          NavigationService.navigate('Profile', { items: card })
+                          NavigationService.navigate('Profilenew', { items: card })
 
                         }}>
                         <ImageBackground

@@ -73,13 +73,13 @@ class Telefon2 extends Component {
 
           <View style={styles.MViewStyle3}>
             <Text style={styles.TextStyle2}>
-              Sosyal Paket ile instagram adresini anında gör takip et ve
-              iletişime geç!
+              Sosyal Paket ile bütün instagram adreslerini anında gör takip et
+              ve iletişime geç!
             </Text>
           </View>
           <View style={styles.MViewStyle4}>
             <Telefon1Packlet
-              price={'74,99'}
+              price={'149,99'}
               packageText={'instagram adresini anında gör!'}
               packageName={'Sosyal Paket'}
               pressStatus={this.state.pressStatus}

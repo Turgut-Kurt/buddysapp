@@ -5,7 +5,7 @@ import {
   FlatList,
   Text,
   TouchableOpacity,
-  Image
+  Image,
 } from 'react-native';
 import ShopHeader from './components/ShopHeader';
 import ShopPackage from './components/ShopPackage';
@@ -19,7 +19,7 @@ export interface Props {
   havaleOdemeYap: Function;
   buyGoogle: Function;
 }
-export interface State { }
+export interface State {}
 
 export default class Shop extends React.Component<Props, State> {
   render() {
@@ -30,22 +30,22 @@ export default class Shop extends React.Component<Props, State> {
       havaleOdemeYap,
       buyStoreProduct,
       isSelected,
-      selectedUrun
+      selectedUrun,
     } = this.props;
     return (
       <ScrollView
         style={styles.scrollView}
         contentContainerStyle={styles.scrollViewContentContainer}>
-        <View style={{ alignItems: 'center', justifyContent: 'center' }}>
+        <View style={{alignItems: 'center', justifyContent: 'center'}}>
           <FlatList
             numColumns={3}
             showsHorizontalScrollIndicator={false}
             showsVerticalScrollIndicator={false}
-            keyExtractor={item => item.id.toString()}
+            keyExtractor={(item) => item.id.toString()}
             data={packets}
-            ListHeaderComponent={() => <View style={{ marginLeft: 10 }} />}
-            ListFooterComponent={() => <View style={{ marginRight: 10 }} />}
-            renderItem={({ item, index }) => {
+            ListHeaderComponent={() => <View style={{marginLeft: 10}} />}
+            ListFooterComponent={() => <View style={{marginRight: 10}} />}
+            renderItem={({item, index}) => {
               return (
                 <ShopPackage
                   key={item.id.toString()}
@@ -57,13 +57,17 @@ export default class Shop extends React.Component<Props, State> {
               );
             }}
           />
-          <View style={{ alignItems: 'center', justifyContent: 'center', marginVertical: 20 }}>
-            <Text style={{ fontWeight: 'bold', color: "#533B8F", fontSize: 18 }}>1 Aylık Gold Özellikleri</Text>
-            <Text style={{ fontSize: 14 }}>Sınırsız mesaj hakkı edinerek tanışma şansını artır!</Text>
-            <Text style={{ fontSize: 14 }}>Etrafındaki yeni kişilerle herkesten önce sohbet et!</Text>
-            <Text style={{ fontSize: 14 }}>Seni beğenenleri gör anında geri dönüş yap!</Text>
-            <Text style={{ fontSize: 14 }}>Dilediğin kadar beğen ve aktif ol!</Text>
-            <Text style={{ fontSize: 14 }}>Dilediğin kişinin instagramını gör!</Text>
+          <View
+            style={{
+              alignItems: 'center',
+              justifyContent: 'center',
+              marginVertical: 20,
+              marginHorizontal: 30,
+            }}>
+            <Text style={{fontSize: 14}}>
+              Havale formu gönderdikten sonra sizi arayacağız. Ödemeleriniz
+              memnun kalmadığınız durumlarda iade için değerlendirilecektir.
+            </Text>
           </View>
           {/*<ShopButton
             text="Paketi Al"
@@ -87,7 +91,6 @@ export default class Shop extends React.Component<Props, State> {
             onPress={() => buyStoreProduct()}
           />*/}
         </View>
-
       </ScrollView>
     );
   }

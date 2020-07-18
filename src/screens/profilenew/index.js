@@ -56,7 +56,7 @@ class Profilenew extends React.Component {
       showPhone: false,
       showInsta: false,
       showMagazin: false,
-      is_pre: true,
+      is_pre: false,
       is_phone: false,
       is_insta: false,
       isvisiblePhone: false,
@@ -94,9 +94,9 @@ class Profilenew extends React.Component {
   };
   componentDidMount = async () => {
     const detail = this.props.navigation.getParam('items');
-    console.log('*****************');
+    console.log('****************deneneeee*');
     console.log(detail);
-    console.log('*****************');
+    console.log('***********deneneeee******');
     if (detail) {
       this.backHandler = BackHandler.addEventListener(
         'hardwareBackPress',
@@ -113,6 +113,7 @@ class Profilenew extends React.Component {
         is_pre: detail.is_pre,
         is_phone: detail.is_phone,
       });
+
       await this.likeFunc(detail.id);
     } else {
       this.getUserInfo();
@@ -137,6 +138,7 @@ class Profilenew extends React.Component {
           currentUser: user.data,
           currentUserLike: userId === user.data.id,
         });
+
       } catch (e) {
         setTimeout(await this.getUserInfo(), 5000);
       }
@@ -588,9 +590,9 @@ class Profilenew extends React.Component {
                   </Text>
                   <TouchableOpacity
                     onPress={
-                      this.state.is_pre === false
-                        ? this.showMagazin1
-                        : this.showPhone
+                      this.state.is_pre === true
+                        ? this.showPhone
+                        : this.showMagazin1
                     }
                     style={styles1.ContentButtonStyle}>
                     <Text style={styles1.ContentTextStyle3}>
@@ -608,9 +610,9 @@ class Profilenew extends React.Component {
                   </Text>
                   <TouchableOpacity
                     onPress={
-                      this.state.is_pre === false
-                        ? this.showMagazin1
-                        : this.showInsta
+                      this.state.is_pre === true
+                        ? this.showInsta
+                        : this.showMagazin1
                     }
                     style={styles1.ContentButtonStyle}>
                     <Text style={styles1.ContentTextStyle3}>

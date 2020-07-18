@@ -74,13 +74,13 @@ class Telefon extends Component {
 
           <View style={styles.MViewStyle3}>
             <Text style={styles.TextStyle2}>
-              Süper paket ile telefon numarasını anında görüntüle arama ve
-              yakından tanışma şansı yakala !
+              Süper paket ile bütün telefon numaralarını anında görüntüleme,
+              arama ve yakından tanışma şansı yakala !
             </Text>
           </View>
           <View style={styles.MViewStyle4}>
             <Telefon1Packlet
-              price={'99,99'}
+              price={'199,99'}
               packageText={'Telefon Numarasini Aninda Gor'}
               packageName={'Super Paket'}
               pressStatus={this.state.pressStatus}

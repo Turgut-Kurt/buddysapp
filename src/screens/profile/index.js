@@ -321,9 +321,9 @@ class Profile extends React.Component {
               <TouchableOpacity
                 style={styles1.Content4inViewinFlexTouch}
                 onPress={
-                  this.state.is_vip === false
-                    ? this.showMagazin2
-                    : this._toastWithDurationHandler
+                  this.state.is_vip === true
+                    ? this._toastWithDurationHandler
+                    : this.showMagazin2
                 }>
                 <View style={styles1.Content4inViewinFlexTouchinView1}>
                   <Image
@@ -346,9 +346,9 @@ class Profile extends React.Component {
               <TouchableOpacity
                 style={styles1.Content4inViewinFlexTouch}
                 onPress={
-                  this.state.is_vip === false
-                    ? this.showVitrin
-                    : this._toastWithDurationHandler
+                  this.state.is_vip === true
+                    ? this._toastWithDurationHandler
+                    : this.showVitrin
                 }>
                 <View style={styles1.Content4inViewinFlexTouchinView1}>
                   <Image
@@ -371,9 +371,9 @@ class Profile extends React.Component {
               <TouchableOpacity
                 style={styles1.Content4inViewinFlexTouch}
                 onPress={
-                  this.state.is_vip === false
-                    ? this.showMagazin
-                    : this._toastWithDurationHandler
+                  this.state.is_vip === true
+                    ? this._toastWithDurationHandler
+                    : this.showMagazin
                 }>
                 <View style={styles1.Content4inViewinFlexTouchinView1}>
                   <Image
