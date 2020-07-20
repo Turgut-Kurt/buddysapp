@@ -8,7 +8,7 @@ const styles = StyleSheet.create({
   backImageStyle: {height: '100%', width: '100%'},
   MTextView: {flex: 1},
   MTextViewinText: {
-    fontSize: calculate(6),
+    fontSize: calculate(5.5),
     textAlign: 'center',
     color: '#ffffff',
     fontFamily: 'Montserrat-ExtraBoldItalic',

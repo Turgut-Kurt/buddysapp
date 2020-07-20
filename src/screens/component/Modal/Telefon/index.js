@@ -12,28 +12,124 @@ import Gradback from '../../../../assets/images/gradback.png';
 import Match from '../../../../assets/images/match.png';
 import phone from '../../../../assets/images/phone.png';
 import NavigationService from '../../../../services/NavigationService';
+import * as RNIap from 'react-native-iap';
+import {axiosInstance} from '../../../../utils/Api';
 class Telefon extends Component {
   constructor(props) {
     super(props);
     this.state = {
       pressStatus: false,
+      skuProduct: null,
+      skuItems: ['superpaket1'],
     };
   }
+  componentDidMount = async () => {
+    try {
+      this.shopFunction();
+    } catch (err) {
+      ToastAndroid.show(
+        'Mağazaya bağlanırken bir hata oluştu.',
+        ToastAndroid.CENTER,
+        ToastAndroid.LONG,
+      );
+    }
+  };
+  async shopFunction() {
+    try {
+      await RNIap.initConnection();
+      await this.getStoreProducts();
+      await this.getStoreSubscription();
+    } catch (e) {
+      setTimeout(() => this.shopFunction(), 1000);
+    }
+  }
+  getStoreProducts = async () => {
+    try {
+      await RNIap.getProducts(this.state.skuItems);
+    } catch (e) {
+      console.log(e);
+    }
+  };
+  getStoreSubscription = async () => {
+    try {
+      await RNIap.getSubscriptions(this.state.skuItems);
+    } catch (e) {
+      console.log(e);
+    }
+  };
+  initialState = () => {
+    this.setState({
+      pressStatus: false,
+    });
+  };
   onPressFullPackage = () => {
-    this.setState({pressStatus: !this.state.pressStatus});
+    this.setState({
+      pressStatus: !this.state.pressStatus,
+      skuProduct: this.state.skuItems[0],
+    });
+  };
+  onStoreBuyProduct = async () => {
+    try {
+      const purchase = await RNIap.requestPurchase(this.state.skuProduct);
+      const parsePurchase = await JSON.parse(purchase.transactionReceipt);
+      this.onStoreBuyProductSendBackend(
+        parsePurchase.purchaseToken,
+        parsePurchase.productId,
+        parsePurchase.orderId,
+      );
+      const backResult = await RNIap.finishTransaction(purchase, true);
+    } catch (error) {
+      console.log(error);
+      if (error.message === 'You already own this item.') {
+        alert('Bu Pakete zaten sahipsiniz');
+      }
+    }
+  };
+  onStoreBuyProductSendBackend = async (purchaseToken, productId, orderId) => {
+    try {
+      await axiosInstance.post('https://www.onappserver.com/packets/confirm/', {
+        purchaseToken,
+        productId,
+        orderId,
+      });
+      ToastAndroid.show(
+        'Başarı ile satın alındı.',
+        ToastAndroid.CENTER,
+        ToastAndroid.LONG,
+      );
+    } catch (e) {
+      ToastAndroid.show(
+        'Bir Hata Oluştu.',
+        ToastAndroid.CENTER,
+        ToastAndroid.LONG,
+      );
+    }
+  };
+  closeModal = () => {
+    this.initialState();
+    this.props.handleClose?.();
   };
   goShop() {
     this.props.handleClose?.();
     NavigationService.navigate('Shop');
   }
-  onPressBuyNow = () => {
+  onPressBuyEft = () => {
     if (this.state.pressStatus === true) {
       this.goShop();
     } else {
-      ToastAndroid.showWithGravity(
+      ToastAndroid.show(
         'Lütfen satın almak istediğiniz paketi seçin',
         ToastAndroid.SHORT,
-        ToastAndroid.CENTER,
+      );
+    }
+  };
+  onPressBuyNow = () => {
+    if (this.state.pressStatus === true) {
+      this.onStoreBuyProduct(this.state.skuProduct).then((r) => console.log(r));
+    } else {
+      ToastAndroid.show(
+        'Lütfen satın almak istediğiniz paketi seçin',
+        ToastAndroid.SHORT,
       );
     }
   };
@@ -42,7 +138,7 @@ class Telefon extends Component {
     return (
       <Modal
         isVisible={show}
-        onSwipeComplete={handleClose}
+        onSwipeComplete={this.closeModal}
         swipeDirection="left">
         <View style={styles.MViewStyle1}>
           <View style={styles.TopView}>
@@ -89,13 +185,13 @@ class Telefon extends Component {
           </View>
           <View style={styles.MViewStyle5}>
             <View style={styles.MViewStyle13}>
-              <BuyButton />
+              <BuyButton onPress={this.onPressBuyNow} />
             </View>
             <View style={styles.MViewStyle14}>
               <Veya />
             </View>
             <View style={styles.MViewStyle13}>
-              <BuyEftButton onPress={this.onPressBuyNow} />
+              <BuyEftButton onPress={this.onPressBuyEft} />
             </View>
             <View style={styles.MViewStyle14}>
               <PaymentText />

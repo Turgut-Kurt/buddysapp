@@ -86,7 +86,7 @@ class Chat extends React.Component {
   async sendProfile(id) {
     console.log(id);
     const user = await axiosInstance.get(`api/users/${id}/`);
-    this.props.navigation.navigate('Profile', {items: user.data});
+    this.props.navigation.navigate('Profilenew', {items: user.data});
   }
   getMessages = async (username) => {
     try {

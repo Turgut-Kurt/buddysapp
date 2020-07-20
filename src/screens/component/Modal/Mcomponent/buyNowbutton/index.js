@@ -5,7 +5,7 @@ import {calculate} from '../../../../../Dimensions';
 class Index extends Component {
   render() {
     return (
-      <TouchableOpacity  style={styles.Container}>
+      <TouchableOpacity onPress={this.props.onPress} style={styles.Container}>
         <LinearGradient
           start={{x: 0.0, y: 1.0}}
           end={{x: 1.0, y: 1.0}}

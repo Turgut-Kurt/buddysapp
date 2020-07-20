@@ -22,6 +22,7 @@ import {GetLastOnlineUsers} from '../../store/Actions/LastOnlineUsers';
 import {GetAnswerToSpecialQuestion} from '../../store/Actions/AnswerToSpecialQuestion';
 import {axiosInstance} from '../../utils/Api';
 import NavigationService from '../../services/NavigationService';
+import * as RNIap from 'react-native-iap';
 
 class Trend extends Component {
   constructor(props) {
@@ -30,10 +31,15 @@ class Trend extends Component {
       vip: null,
       list: [],
       myid: null,
+      // loading: false,
+      // packets: null,
+      // skuItems: [],
+      // dene: true,
     };
   }
 
   componentDidMount = async () => {
+    // this.shopFunction();
     const {userId} = this.props.SignInReducer;
     await this.getCurrentUser(userId);
 
@@ -45,11 +51,6 @@ class Trend extends Component {
     await this.props.GetShowcase();
     const {data: d1} = this.props.ShowcaseReducer;
     this.setState({list: [].concat(this.state.list, d0, d1)});
-    console.log('NEWlistNEWlistNEWlistNEWlistNEWlist');
-    console.log('NEWlistNEWlistNEWlistNEWlistNEWlist');
-    console.log(this.state.list);
-    console.log('NEWlistNEWlistNEWlistNEWlistNEWlist');
-    console.log('NEWlistNEWlistNEWlistNEWlistNEWlist');
 
     await this.props.GetGivesWantedAnswersUsers();
     let distance = await this.getDistance();
@@ -59,6 +60,40 @@ class Trend extends Component {
     await this.props.GetAnswerToSpecialQuestion();
     // await this.props.GetLastOnlineUsers();
   };
+
+  // async shopFunction() {
+  //   try {
+  //     await this.getPackets();
+  //   } catch (e) {
+  //     setTimeout(() => this.shopFunction(), 1000);
+  //     console.log('KALDKKALDKKALDKKALDKKALDKKALDKKALDKKALDKKALDK');
+  //   }
+  // }
+
+  // getPackets = async () => {
+  //   this.setState({loading: true});
+  //   if (this.state.dene === true) {
+  //     const getPackets = await axiosInstance.get(
+  //       'https://www.onappserver.com/packets/packets/',
+  //     );
+  //     const packets = getPackets.data.results;
+  //     console.log(packets);
+  //     this.setState({
+  //       packets,
+  //       loading: false,
+  //       skuItems: [
+  //         ...packets
+  //           .filter((x) => x.product_id !== null)
+  //           .map((p) => p.product_id),
+  //       ],
+  //     });
+  //     console.log('GEÇTİGEÇTİGEÇTİGEÇTİGEÇTİGEÇTİGEÇTİGEÇTİGEÇTİGEÇTİ');
+  //     console.log(this.state.skuItems);
+  //   } else {
+  //     //console.log(e);
+  //     this.setState({loading: false});
+  //   }
+  // };
 
   getCurrentUser = async (userId) => {
     try {

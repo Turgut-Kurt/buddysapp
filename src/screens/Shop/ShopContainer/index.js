@@ -7,10 +7,10 @@ import {
   ToastAndroid,
   TextInput,
   Modal,
-  Image
+  Image,
 } from 'react-native';
 import Shop from '../../Shop';
-import { axiosInstance } from '../../../utils/Api';
+import {axiosInstance} from '../../../utils/Api';
 import styles from './styles';
 import * as RNIap from 'react-native-iap';
 
@@ -46,28 +46,31 @@ class ShopContainer extends React.Component<Props, State> {
       await this.getPackets();
       await this.getStoreProducts();
       await this.getStoreSubscription();
-    }
-    catch (e) {
+    } catch (e) {
       setTimeout(() => this.shopFunction(), 1000);
     }
   }
 
   getPackets = async () => {
-    this.setState({ loading: true });
+    this.setState({loading: true});
     if (true) {
-      const getPackets = await axiosInstance.get('https://www.onappserver.com/packets/packets/');
+      const getPackets = await axiosInstance.get(
+        'https://www.onappserver.com/packets/packets/',
+      );
       const packets = getPackets.data.results;
-      console.log(packets)
+      console.log(packets);
       this.setState({
         packets,
         loading: false,
         skuItems: [
-          ...packets.filter(x => x.product_id !== null).map(p => p.product_id),
+          ...packets
+            .filter((x) => x.product_id !== null)
+            .map((p) => p.product_id),
         ],
       });
     } else {
       //console.log(e);
-      this.setState({ loading: false });
+      this.setState({loading: false});
     }
   };
 
@@ -85,8 +88,6 @@ class ShopContainer extends React.Component<Props, State> {
       console.log(e);
     }
   };
-
-
 
   onStoreBuyProduct = async () => {
     try {
@@ -127,8 +128,7 @@ class ShopContainer extends React.Component<Props, State> {
     }
   };
 
-
-  selectUrun = async urun => {
+  selectUrun = async (urun) => {
     await this.setState({
       skuProduct: urun.product_id,
       secilenUrun: urun,
@@ -137,7 +137,7 @@ class ShopContainer extends React.Component<Props, State> {
   };
 
   normalOdemeYap = () => {
-    const { secilenUrun } = this.state;
+    const {secilenUrun} = this.state;
     if (secilenUrun !== null) {
       console.log('normalOdemeYap =>', secilenUrun.id);
       this.normalPayment(secilenUrun.id);
@@ -150,10 +150,10 @@ class ShopContainer extends React.Component<Props, State> {
     }
   };
 
-  normalPayment = async id => {
+  normalPayment = async (id) => {
     try {
-      await axiosInstance.post('/packets/my-packets/', { packet: id });
-      this.setState({ modal: true });
+      await axiosInstance.post('/packets/my-packets/', {packet: id});
+      this.setState({modal: true});
     } catch (e) {
       console.log(e);
       ToastAndroid.show(
@@ -165,8 +165,8 @@ class ShopContainer extends React.Component<Props, State> {
   };
 
   havaleOdemeYap = () => {
-    const { secilenUrun } = this.state;
-    this.setState({ paymentModal: true });
+    const {secilenUrun} = this.state;
+    this.setState({paymentModal: true});
     //if (secilenUrun !== null) {
     //  console.log('havaleOdemeYap =>', secilenUrun);
     //} else {
@@ -179,15 +179,15 @@ class ShopContainer extends React.Component<Props, State> {
   };
 
   paymentByWireTransfer = async () => {
-    const { note } = this.state;
+    const {note} = this.state;
     try {
-      await axiosInstance.post('/packets/buy-packet-form/', { note });
+      await axiosInstance.post('/packets/buy-packet-form/', {note});
       ToastAndroid.show(
         'Teşekkürler, Notunuz başarıyla gönderildi. Size dönüş yapılacaktır.',
         ToastAndroid.LONG,
         ToastAndroid.CENTER,
       );
-      this.setState({ paymentModal: false });
+      this.setState({paymentModal: false});
     } catch (e) {
       console.log(e);
       ToastAndroid.show(
@@ -202,12 +202,14 @@ class ShopContainer extends React.Component<Props, State> {
     return (
       <Modal>
         <View style={styles.modal}>
-          <Text style={styles.text}>Lütfen Telefon Numaranızı ve İstediğiniz Paketi Giriniz.</Text>
+          <Text style={styles.text}>
+            Lütfen Telefon Numaranızı ve İstediğiniz Paketi Giriniz.
+          </Text>
           <TextInput
             multiline
             style={styles.note}
             value={this.state.note}
-            onChangeText={note => this.setState({ note })}
+            onChangeText={(note) => this.setState({note})}
           />
           <TouchableOpacity
             style={styles.okButton}
@@ -220,7 +222,7 @@ class ShopContainer extends React.Component<Props, State> {
   };
 
   render() {
-    const { loading, packets, modal, paymentModal } = this.state;
+    const {loading, packets, modal, paymentModal} = this.state;
     if (loading) {
       return <ActivityIndicator size={40} />;
     } else {
@@ -236,7 +238,7 @@ class ShopContainer extends React.Component<Props, State> {
               </Text>
               <TouchableOpacity
                 style={styles.okButton}
-                onPress={() => this.setState({ modal: false })}>
+                onPress={() => this.setState({modal: false})}>
                 <Text style={styles.okButtonTitle}>Tamam</Text>
               </TouchableOpacity>
             </View>
@@ -251,16 +253,16 @@ class ShopContainer extends React.Component<Props, State> {
                 justifyContent: 'center',
               }}
               onPress={() => {
-                this.props.navigation.goBack()
+                this.props.navigation.goBack();
               }}>
               <Image
-                style={{ width: 30, height: 30, resizeMode: 'contain' }}
+                style={{width: 30, height: 30, resizeMode: 'contain'}}
                 source={require('../../../assets/images/back.png')}
               />
             </TouchableOpacity>
           </View>
 
-          {paymentModal && this.renderPaymentModal()}
+          {/*{paymentModal && this.renderPaymentModal()}*/}
 
           <Shop
             packets={packets}

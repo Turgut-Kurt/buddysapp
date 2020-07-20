@@ -52,7 +52,7 @@ const styles = StyleSheet.create({
     width: '100%',
   },
   TextStyle6: {
-    fontSize: calculate(5.7),
+    fontSize: calculate(5.5),
     color: '#F6481F',
     fontFamily: 'Montserrat-Bold',
     textAlign: 'center',

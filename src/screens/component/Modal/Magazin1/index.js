@@ -11,7 +11,8 @@ import MagazinTop from '../Mcomponent/Magazin1Top';
 import Match from '../../../../assets/images/match.png';
 import MagazinPacket from '../Mcomponent/MagazinPacket';
 import NavigationService from '../../../../services/NavigationService';
-import VitrinPacket1 from '../Mcomponent/VitrinPacket1';
+import * as RNIap from 'react-native-iap';
+import {axiosInstance} from '../../../../utils/Api';
 class Magazin2 extends Component {
   constructor(props) {
     super(props);
@@ -19,13 +20,57 @@ class Magazin2 extends Component {
       pressStatus: false,
       pressStatus1: false,
       pressStatus2: false,
+      skuProduct: null,
+      skuItems: ['premium1', 'premium6', 'premium3'],
     };
   }
+  componentDidMount = async () => {
+    try {
+      this.shopFunction();
+    } catch (err) {
+      ToastAndroid.show(
+        'Mağazaya bağlanırken bir hata oluştu.',
+        ToastAndroid.CENTER,
+        ToastAndroid.LONG,
+      );
+    }
+  };
+  async shopFunction() {
+    try {
+      await RNIap.initConnection();
+      await this.getStoreProducts();
+      await this.getStoreSubscription();
+    } catch (e) {
+      setTimeout(() => this.shopFunction(), 1000);
+    }
+  }
+  getStoreProducts = async () => {
+    try {
+      await RNIap.getProducts(this.state.skuItems);
+    } catch (e) {
+      console.log(e);
+    }
+  };
+  getStoreSubscription = async () => {
+    try {
+      await RNIap.getSubscriptions(this.state.skuItems);
+    } catch (e) {
+      console.log(e);
+    }
+  };
+  initialState = () => {
+    this.setState({
+      pressStatus: false,
+      pressStatus1: false,
+      pressStatus2: false,
+    });
+  };
   onPressPackage1 = () => {
     this.setState({
       pressStatus: !this.state.pressStatus,
       pressStatus1: false,
       pressStatus2: false,
+      skuProduct: this.state.skuItems[0],
     });
   };
   onPressPackage2 = () => {
@@ -33,6 +78,7 @@ class Magazin2 extends Component {
       pressStatus: false,
       pressStatus1: !this.state.pressStatus1,
       pressStatus2: false,
+      skuProduct: this.state.skuItems[1],
     });
   };
   onPressPackage3 = () => {
@@ -40,13 +86,55 @@ class Magazin2 extends Component {
       pressStatus: false,
       pressStatus1: false,
       pressStatus2: !this.state.pressStatus2,
+      skuProduct: this.state.skuItems[2],
     });
+  };
+  onStoreBuyProduct = async () => {
+    try {
+      const purchase = await RNIap.requestPurchase(this.state.skuProduct);
+      const parsePurchase = await JSON.parse(purchase.transactionReceipt);
+      this.onStoreBuyProductSendBackend(
+        parsePurchase.purchaseToken,
+        parsePurchase.productId,
+        parsePurchase.orderId,
+      );
+      const backResult = await RNIap.finishTransaction(purchase, true);
+    } catch (error) {
+      console.log(error);
+      if (error.message === 'You already own this item.') {
+        alert('Bu Pakete zaten sahipsiniz');
+      }
+    }
+  };
+  onStoreBuyProductSendBackend = async (purchaseToken, productId, orderId) => {
+    try {
+      await axiosInstance.post('https://www.onappserver.com/packets/confirm/', {
+        purchaseToken,
+        productId,
+        orderId,
+      });
+      ToastAndroid.show(
+        'Başarı ile satın alındı.',
+        ToastAndroid.CENTER,
+        ToastAndroid.LONG,
+      );
+    } catch (e) {
+      ToastAndroid.show(
+        'Bir Hata Oluştu.',
+        ToastAndroid.CENTER,
+        ToastAndroid.LONG,
+      );
+    }
+  };
+  closeModal = () => {
+    this.initialState();
+    this.props.handleClose?.();
   };
   goShop() {
     this.props.handleClose?.();
     NavigationService.navigate('Shop');
   }
-  onPressBuyNow = () => {
+  onPressBuyEft = () => {
     if (
       this.state.pressStatus === true ||
       this.state.pressStatus1 === true ||
@@ -60,12 +148,26 @@ class Magazin2 extends Component {
       );
     }
   };
+  onPressBuyNow = () => {
+    if (
+      this.state.pressStatus === true ||
+      this.state.pressStatus1 === true ||
+      this.state.pressStatus2 === true
+    ) {
+      this.onStoreBuyProduct(this.state.skuProduct).then((r) => console.log(r));
+    } else {
+      ToastAndroid.show(
+        'Lütfen satın almak istediğiniz paketi seçin',
+        ToastAndroid.SHORT,
+      );
+    }
+  };
   render() {
     const {show, handleClose} = this.props;
     return (
       <Modal
         isVisible={show}
-        onSwipeComplete={handleClose}
+        onSwipeComplete={this.closeModal}
         swipeDirection="left">
         <View style={styles.Container}>
           <View style={styles.TopView}>
@@ -106,13 +208,13 @@ class Magazin2 extends Component {
           </View>
           <View style={styles.MViewStyle5}>
             <View style={[styles.MViewStyle13, {justifyContent: 'flex-end'}]}>
-              <BuyButton />
+              <BuyButton onPress={this.onPressBuyNow} />
             </View>
             <View style={styles.MViewStyle14}>
               <Veya />
             </View>
             <View style={[styles.MViewStyle13]}>
-              <BuyEftButton onPress={this.onPressBuyNow} />
+              <BuyEftButton onPress={this.onPressBuyEft} />
             </View>
             <View style={styles.MViewStyle14}>
               <PaymentText />

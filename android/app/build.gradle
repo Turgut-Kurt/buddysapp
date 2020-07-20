@@ -131,8 +131,8 @@ android {
         applicationId "com.buddy.appsocialbuddy"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 43
-        versionName "43"
+        versionCode 44
+        versionName "44"
         multiDexEnabled true
     }
     splits {

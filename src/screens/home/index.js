@@ -88,16 +88,14 @@ class Home extends React.Component {
     OneSignal.addEventListener('opened', this.onOpened);
     OneSignal.addEventListener('ids', this.onIds);
     OneSignal.inFocusDisplaying(2);
-    this.setLocation();
   }
   setNotif = async (notifToken) => {
     const {userId} = this.props.SignInReducer;
-    let form = new FormData();
-
     try {
       await Geolocation.getCurrentPosition(
         (position) => {
           const coords = position.coords;
+          const form = new FormData();
           form.append('_method', 'patch');
           form.append(
             'profile.location',
@@ -119,26 +117,7 @@ class Home extends React.Component {
       }
     } catch {}
   };
-  setLocation = async () => {
-    const {userId} = this.props.SignInReducer;
-    let form = new FormData();
-    try {
-      await Geolocation.getCurrentPosition(
-        (position) => {
-          const coords = position.coords;
-          form.append('_method', 'patch');
-          form.append(
-            'profile.location',
-            `SRID=4326;POINT(${coords.longitude} ${coords.latitude})`,
-          );
-          axiosInstance.patch(`api/users/${userId}/`, form);
-        },
-        (error) => {
-          console.log(error.code, error.message);
-        },
-      );
-    } catch {}
-  };
+
   pageChange = async (index) => {
     if (index === 2) {
       this.props.GetFilters(this.props.FiltersReducer.filters, true);

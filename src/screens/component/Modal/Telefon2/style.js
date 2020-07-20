@@ -57,7 +57,7 @@ const styles = StyleSheet.create({
   backImageinView1inView2: {flex: 0.9},
   backImageinView2: {flex: 4.5, paddingTop: calculate(3)},
   TextStyleHeader: {
-    fontSize: calculate(6.7),
+    fontSize: calculate(6.3),
     color: '#ffffff',
     fontFamily: 'Montserrat-ExtraBoldItalic',
   },

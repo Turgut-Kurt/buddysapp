@@ -15,11 +15,10 @@ class Index extends Component {
 const styles = StyleSheet.create({
   Container: {
     flex: 1,
-    marginHorizontal: calculate(0.3),
     alignItems: 'center',
   },
   TextStyle1: {
-    fontSize: calculate(1.6),
+    fontSize: calculate(1.54),
     color: '#262628',
     textAlign: 'center',
     fontFamily: 'Montserrat-SemiBold',

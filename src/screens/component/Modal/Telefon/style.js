@@ -65,11 +65,11 @@ const styles = StyleSheet.create({
   MViewStyle3: {
     flex: 0.8,
     overflow: 'hidden',
-    paddingHorizontal: calculate(3.3),
+    paddingHorizontal: calculate(2),
     alignItems: 'center',
   },
   TextStyle2: {
-    fontSize: calculate(3),
+    fontSize: calculate(2.8),
     textAlign: 'center',
     fontFamily: 'Montserrat-Regular',
   },
